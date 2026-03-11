@@ -26,7 +26,7 @@ text-align:center;
 position:fixed;
 top:20px;
 right:20px;
-font-size:30px;
+font-size:28px;
 cursor:pointer;
 display:none;
 }
@@ -40,10 +40,12 @@ height:100%;
 background:#111;
 padding:20px;
 transition:0.3s;
+box-shadow:0 0 20px cyan;
 }
 
 .sidebar button{
 width:100%;
+margin-top:20px;
 }
 
 /* box */
@@ -90,6 +92,22 @@ box-shadow:0 0 20px purple;
 display:none;
 }
 
+/* notification */
+
+#notify{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:linear-gradient(45deg,cyan,magenta);
+color:white;
+padding:15px 30px;
+border-radius:10px;
+font-weight:bold;
+display:none;
+box-shadow:0 0 20px cyan;
+}
+
 a{
 color:cyan;
 cursor:pointer;
@@ -100,6 +118,8 @@ cursor:pointer;
 </head>
 
 <body>
+
+<div id="notify"></div>
 
 <div class="menuBtn" id="menuBtn" onclick="menuToggle()">☰</div>
 
@@ -112,6 +132,21 @@ cursor:pointer;
 
 <script>
 
+/* notification */
+
+function notify(msg){
+
+let box=document.getElementById("notify")
+
+box.innerText=msg
+box.style.display="block"
+
+setTimeout(()=>{
+box.style.display="none"
+},3000)
+
+}
+
 /* start */
 
 if(localStorage.getItem("login")=="true"){
@@ -120,7 +155,7 @@ showMain()
 showLogin()
 }
 
-/* LOGIN PAGE */
+/* LOGIN */
 
 function showLogin(){
 
@@ -150,7 +185,7 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* REGISTER PAGE */
+/* REGISTER */
 
 function showRegister(){
 
@@ -178,7 +213,7 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* MAIN WEBSITE */
+/* MAIN */
 
 function showMain(){
 
@@ -201,40 +236,28 @@ document.getElementById("app").innerHTML=`
 </div>
 
 <div class="card" id="card1">
-
 <h2>120K → 200K Glory</h2>
-
 <p>Delivery 30 Minutes</p>
-
 <button onclick="boost()">Boost Now</button>
-
 </div>
 
 <div class="card" id="card2">
-
 <h2>200K → 400K Glory</h2>
-
 <p>Delivery 1 Hour</p>
-
 <button onclick="boost()">Boost Now</button>
-
 </div>
 
 <div class="card" id="card3">
-
 <h2>400K → 800K Glory</h2>
-
 <p>Delivery 2 Hours</p>
-
 <button onclick="boost()">Boost Now</button>
-
 </div>
 
 `
 
 }
 
-/* REGISTER */
+/* REGISTER FUNCTION */
 
 function register(){
 
@@ -244,13 +267,13 @@ let p=document.getElementById("pass").value
 localStorage.setItem("username",u)
 localStorage.setItem("password",p)
 
-alert("Account Created")
+notify("Account Created ✅")
 
 showLogin()
 
 }
 
-/* LOGIN */
+/* LOGIN FUNCTION */
 
 function login(){
 
@@ -264,11 +287,13 @@ if(u==su && p==sp){
 
 localStorage.setItem("login","true")
 
+notify("Login Success 🎉")
+
 showMain()
 
 }else{
 
-alert("Wrong Username or Password")
+notify("Wrong Username or Password ❌")
 
 }
 
@@ -295,7 +320,7 @@ function submitUID(){
 let uid=document.getElementById("uid").value
 
 if(uid==""){
-alert("Enter UID first")
+notify("Enter UID first")
 return
 }
 
@@ -303,13 +328,15 @@ document.getElementById("card1").style.display="block"
 document.getElementById("card2").style.display="block"
 document.getElementById("card3").style.display="block"
 
+notify("UID Submitted 🚀")
+
 }
 
 /* BOOST */
 
 function boost(){
 
-alert("Boost Request Received 🔥")
+notify("Boost Request Received 🔥")
 
 }
 
@@ -318,6 +345,8 @@ alert("Boost Request Received 🔥")
 function logout(){
 
 localStorage.removeItem("login")
+
+notify("Logged Out")
 
 showLogin()
 
