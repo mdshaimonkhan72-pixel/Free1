@@ -4,14 +4,14 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Guild Glory Bot</title>
+<title>Guild Glory</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:linear-gradient(270deg,#09061a,#140b33,#09061a);
+background:linear-gradient(270deg,#0b0620,#1a0f3d,#0b0620);
 background-size:600% 600%;
 animation:bg 10s infinite alternate;
 color:white;
@@ -23,55 +23,54 @@ text-align:center;
 100%{background-position:100%}
 }
 
+/* header */
+
 .header{
 display:flex;
 justify-content:space-between;
+align-items:center;
 padding:15px;
 background:#0c0820;
-box-shadow:0 0 20px purple;
 }
 
 .menuBtn{
-font-size:26px;
+font-size:28px;
 cursor:pointer;
 }
 
-.credit{
-color:#8df;
+/* dropdown menu */
+
+.dropdown{
+display:none;
+position:absolute;
+top:60px;
+left:15px;
+background:#111;
+padding:15px;
+border-radius:10px;
+box-shadow:0 0 20px purple;
 }
 
-/* menu */
-
-.sidebar{
-position:fixed;
-left:-240px;
-top:0;
-width:240px;
-height:100%;
-background:#0c0820;
-padding:20px;
-transition:0.3s;
-}
-
-.sidebar button{
-width:100%;
-padding:12px;
-margin-top:10px;
+.dropdown button{
+display:block;
+width:150px;
+margin:5px 0;
+padding:10px;
 border:none;
+border-radius:6px;
 background:linear-gradient(45deg,cyan,magenta);
 color:white;
-border-radius:6px;
 cursor:pointer;
 }
 
-/* box */
+/* login box */
 
 .box{
 background:#0d0922;
 margin:40px;
 padding:30px;
 border-radius:15px;
-box-shadow:0 0 20px purple;
+box-shadow:0 0 30px purple;
 }
 
 input{
@@ -93,44 +92,19 @@ color:white;
 cursor:pointer;
 }
 
-/* dashboard */
-
-.mainCard{
-margin:20px;
-padding:25px;
-border-radius:20px;
-background:#100a2a;
-box-shadow:0 0 40px purple;
-}
-
-.username{
-font-size:30px;
-color:orange;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
-padding:20px;
-}
-
-.card{
-background:#0d0922;
-padding:20px;
-border-radius:15px;
-box-shadow:0 0 20px purple;
-}
-
-.card span{
-display:block;
-font-size:13px;
-color:#aaa;
-}
-
 a{
 color:cyan;
 cursor:pointer;
+}
+
+/* dashboard */
+
+.card{
+background:#0d0922;
+margin:20px;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 20px purple;
 }
 
 </style>
@@ -145,13 +119,11 @@ cursor:pointer;
 
 <div>🔔</div>
 
-<div class="credit">9990 Credits</div>
+<div>9990 Credits</div>
 
 </div>
 
-<div class="sidebar" id="menu">
-
-<h3>Menu</h3>
+<div class="dropdown" id="menu">
 
 <button onclick="showDashboard()">Dashboard</button>
 
@@ -175,19 +147,19 @@ showLogin()
 
 }
 
-/* menu */
+/* menu toggle */
 
 function toggleMenu(){
 
 let menu=document.getElementById("menu")
 
-if(menu.style.left=="0px"){
+if(menu.style.display=="block"){
 
-menu.style.left="-240px"
+menu.style.display="none"
 
 }else{
 
-menu.style.left="0px"
+menu.style.display="block"
 
 }
 
@@ -257,45 +229,27 @@ let user=localStorage.getItem("username")
 
 document.getElementById("app").innerHTML=`
 
-<div class="mainCard">
+<div class="card">
 
-<h3>Hello user 👋</h3>
+<h2>Hello ${user} 👋</h2>
 
-<div class="username">${user}</div>
-
-<p>Welcome to Badal Guild Glory bot</p>
+<p>Welcome to Guild Glory Bot</p>
 
 <p id="time"></p>
 
 </div>
 
-<div class="grid">
+<div class="card">📱 Mobile</div>
 
-<div class="card">📱 V2439<span>Mobile</span></div>
+<div class="card">🌐 IP Address</div>
 
-<div class="card">🌐 IP<span>Address</span></div>
+<div class="card">💻 Browser</div>
 
-<div class="card">💻 Chrome<span>Browser</span></div>
+<div class="card">📦 OS</div>
 
-<div class="card">📦 Android<span>OS</span></div>
+<div class="card">🔋 Battery</div>
 
-<div class="card">📶 3G<span>Internet</span></div>
-
-<div class="card">🔋 33%<span>Battery</span></div>
-
-<div class="card">📺 393x870<span>Screen</span></div>
-
-<div class="card">🧠 8 Core<span>CPU</span></div>
-
-<div class="card">🌍 EN<span>Language</span></div>
-
-<div class="card">🎮 3<span>Total Orders</span></div>
-
-<div class="card">🏆 3<span>Success</span></div>
-
-<div class="card">🔥 0<span>Failed</span></div>
-
-</div>
+<div class="card">🎮 Total Orders</div>
 
 `
 
