@@ -31,7 +31,18 @@ border:none;
 <input id="user" placeholder="Username"><br>
 <input id="pass" type="password" placeholder="Password"><br>
 
-<button onclick="login()">Login</button>
+<script>
+
+function login(){
+
+localStorage.setItem("login","true")
+
+window.location="index.html"
+
+}
+
+</script>
+  
 
 <p>Don't have account? <a href="register.html">Register</a></p>
 
