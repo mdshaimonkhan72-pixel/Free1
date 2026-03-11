@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Pro Guild Boost</title>
+<title>Guild Glory Boost</title>
 
 <style>
 
@@ -21,18 +21,17 @@ text-align:center;
 }
 
 h1{
-font-size:35px;
 text-shadow:0 0 20px cyan;
 }
 
-/* container */
+/* box */
 
 .box{
 background:rgba(0,0,0,0.6);
 padding:30px;
 margin:30px;
 border-radius:15px;
-box-shadow:0 0 20px #00ffff;
+box-shadow:0 0 20px cyan;
 }
 
 /* input */
@@ -41,21 +40,18 @@ input{
 padding:12px;
 margin:10px;
 width:220px;
-border:none;
 border-radius:6px;
-outline:none;
+border:2px solid cyan;
 background:black;
 color:white;
-border:2px solid cyan;
-animation:inputGlow 3s infinite alternate;
+outline:none;
+animation:glow 3s infinite alternate;
 }
 
-@keyframes inputGlow{
-
+@keyframes glow{
 0%{box-shadow:0 0 5px cyan;}
-50%{box-shadow:0 0 20px magenta;}
+50%{box-shadow:0 0 15px magenta;}
 100%{box-shadow:0 0 25px orange;}
-
 }
 
 /* button */
@@ -86,6 +82,21 @@ border-radius:12px;
 box-shadow:0 0 20px purple;
 }
 
+/* notification */
+
+#notify{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:linear-gradient(45deg,cyan,magenta);
+padding:15px 30px;
+border-radius:10px;
+font-weight:bold;
+display:none;
+box-shadow:0 0 20px cyan;
+}
+
 a{
 color:cyan;
 cursor:pointer;
@@ -97,9 +108,26 @@ cursor:pointer;
 
 <body>
 
+<div id="notify"></div>
+
 <div id="app"></div>
 
 <script>
+
+/* notification */
+
+function notify(msg){
+
+let box=document.getElementById("notify")
+
+box.innerText=msg
+box.style.display="block"
+
+setTimeout(()=>{
+box.style.display="none"
+},3000)
+
+}
 
 /* start */
 
@@ -179,7 +207,7 @@ document.getElementById("app").innerHTML=`
 
 <p>Fast & Secure Boost System</p>
 
-<input id="uid" placeholder="Enter Free Fire UID">
+<input id="uid" placeholder="Enter UID">
 
 <br>
 
@@ -220,9 +248,7 @@ document.getElementById("app").innerHTML=`
 <h3>Live Activity</h3>
 
 <p>Player123 boosted guild</p>
-
 <p>Rahul boosted guild</p>
-
 <p>Dragon boosted guild</p>
 
 `
@@ -236,10 +262,15 @@ function register(){
 let u=document.getElementById("user").value
 let p=document.getElementById("pass").value
 
+if(u=="" || p==""){
+notify("Enter Username & Password")
+return
+}
+
 localStorage.setItem("username",u)
 localStorage.setItem("password",p)
 
-alert("Account Created")
+notify("Account Created ✅")
 
 showLogin()
 
@@ -259,11 +290,13 @@ if(u==su && p==sp){
 
 localStorage.setItem("login","true")
 
+notify("Login Success 🎉")
+
 showMain()
 
 }else{
 
-alert("Wrong Username")
+notify("Wrong Username or Password ❌")
 
 }
 
@@ -274,6 +307,8 @@ alert("Wrong Username")
 function logout(){
 
 localStorage.removeItem("login")
+
+notify("Logged Out")
 
 showLogin()
 
@@ -286,9 +321,9 @@ function submitUID(){
 let uid=document.getElementById("uid").value
 
 if(uid==""){
-alert("Enter UID first")
+notify("Enter UID first")
 }else{
-alert("UID "+uid+" Submitted 🚀")
+notify("UID "+uid+" Submitted 🚀")
 }
 
 }
@@ -297,7 +332,7 @@ alert("UID "+uid+" Submitted 🚀")
 
 function boost(){
 
-alert("Boost Request Received 🔥")
+notify("Boost Request Received 🔥")
 
 }
 
