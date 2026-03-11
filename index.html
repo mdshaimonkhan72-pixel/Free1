@@ -4,7 +4,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Guild Glory</title>
+<title>Guild Glory Bot</title>
 
 <style>
 
@@ -36,6 +36,7 @@ background:#0c0820;
 .menuBtn{
 font-size:28px;
 cursor:pointer;
+display:none;
 }
 
 /* dropdown menu */
@@ -48,16 +49,16 @@ left:15px;
 background:#111;
 padding:15px;
 border-radius:10px;
-box-shadow:0 0 20px purple;
+box-shadow:0 0 25px purple;
 }
 
 .dropdown button{
 display:block;
-width:150px;
-margin:5px 0;
-padding:10px;
+width:160px;
+margin:8px 0;
+padding:12px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 background:linear-gradient(45deg,cyan,magenta);
 color:white;
 cursor:pointer;
@@ -115,7 +116,7 @@ box-shadow:0 0 20px purple;
 
 <div class="header">
 
-<div class="menuBtn" onclick="toggleMenu()">☰</div>
+<div class="menuBtn" id="menuBtn" onclick="toggleMenu()">☰</div>
 
 <div>🔔</div>
 
@@ -139,6 +140,7 @@ box-shadow:0 0 20px purple;
 
 if(localStorage.getItem("login")=="true"){
 
+document.getElementById("menuBtn").style.display="block"
 showDashboard()
 
 }else{
@@ -168,6 +170,8 @@ menu.style.display="block"
 /* login */
 
 function showLogin(){
+
+document.getElementById("menuBtn").style.display="none"
 
 document.getElementById("app").innerHTML=`
 
@@ -239,7 +243,7 @@ document.getElementById("app").innerHTML=`
 
 </div>
 
-<div class="card">📱 Mobile</div>
+<div class="card">📱 Mobile Info</div>
 
 <div class="card">🌐 IP Address</div>
 
@@ -264,6 +268,13 @@ function register(){
 let u=document.getElementById("user").value
 let p=document.getElementById("pass").value
 
+if(u=="" || p==""){
+
+alert("Fill all fields")
+return
+
+}
+
 localStorage.setItem("username",u)
 localStorage.setItem("password",p)
 
@@ -286,6 +297,8 @@ let sp=localStorage.getItem("password")
 if(u==su && p==sp){
 
 localStorage.setItem("login","true")
+
+document.getElementById("menuBtn").style.display="block"
 
 showDashboard()
 
