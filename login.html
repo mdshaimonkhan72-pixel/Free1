@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<style>
+body{
+background:black;
+color:white;
+text-align:center;
+font-family:Arial;
+}
+
+input{
+padding:10px;
+margin:10px;
+width:200px;
+}
+
+button{
+padding:10px 20px;
+background:orange;
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Login</h1>
+
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+
+<button onclick="login()">Login</button>
+
+<p>Don't have account? <a href="register.html">Register</a></p>
+
+<script>
+function login(){
+
+let u=document.getElementById("user").value
+let p=document.getElementById("pass").value
+
+let su=localStorage.getItem("username")
+let sp=localStorage.getItem("password")
+
+if(u==su && p==sp){
+
+alert("Login Success")
+
+window.location="index.html"
+
+}else{
+
+alert("Wrong Username or Password")
+
+}
+
+}
+</script>
+
+</body>
+</html>
+
