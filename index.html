@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guild Glory Boost</title>
+
+<title>Guild Glory Bot</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:linear-gradient(270deg,#0f0c29,#302b63,#24243e);
+background:linear-gradient(270deg,#09061a,#140b33,#09061a);
 background-size:600% 600%;
 animation:bg 10s infinite alternate;
 color:white;
@@ -21,68 +23,56 @@ text-align:center;
 100%{background-position:100%}
 }
 
-/* notification */
-
-#notify{
-position:fixed;
-top:20px;
-left:50%;
-transform:translateX(-50%);
-background:linear-gradient(45deg,cyan,magenta);
-padding:15px 25px;
-border-radius:10px;
-display:none;
-box-shadow:0 0 20px cyan;
+.header{
+display:flex;
+justify-content:space-between;
+padding:15px;
+background:#0c0820;
+box-shadow:0 0 20px purple;
 }
 
-/* side menu */
+.menuBtn{
+font-size:26px;
+cursor:pointer;
+}
+
+.credit{
+color:#8df;
+}
+
+/* menu */
 
 .sidebar{
 position:fixed;
-left:-220px;
+left:-240px;
 top:0;
-width:220px;
+width:240px;
 height:100%;
-background:#111;
+background:#0c0820;
 padding:20px;
 transition:0.3s;
-box-shadow:5px 0 20px cyan;
 }
 
-.sidebar h3{
-margin-top:0;
-}
-
-/* menu button */
-
-.menuBtn{
-position:fixed;
-left:15px;
-top:50%;
-transform:translateY(-50%);
+.sidebar button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
 background:linear-gradient(45deg,cyan,magenta);
-width:55px;
-height:55px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:26px;
+color:white;
+border-radius:6px;
 cursor:pointer;
-box-shadow:0 0 20px cyan;
 }
 
 /* box */
 
 .box{
-background:#111;
+background:#0d0922;
 margin:40px;
 padding:30px;
 border-radius:15px;
-box-shadow:0 0 20px cyan;
+box-shadow:0 0 20px purple;
 }
-
-/* input */
 
 input{
 padding:12px;
@@ -91,9 +81,8 @@ border-radius:6px;
 border:2px solid cyan;
 background:black;
 color:white;
+margin:10px;
 }
-
-/* button */
 
 button{
 padding:10px 20px;
@@ -102,18 +91,41 @@ border:none;
 border-radius:6px;
 color:white;
 cursor:pointer;
-margin-top:10px;
 }
 
-/* cards */
+/* dashboard */
+
+.mainCard{
+margin:20px;
+padding:25px;
+border-radius:20px;
+background:#100a2a;
+box-shadow:0 0 40px purple;
+}
+
+.username{
+font-size:30px;
+color:orange;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+padding:20px;
+}
 
 .card{
-background:#111;
-margin:20px;
+background:#0d0922;
 padding:20px;
-border-radius:10px;
+border-radius:15px;
 box-shadow:0 0 20px purple;
-display:none;
+}
+
+.card span{
+display:block;
+font-size:13px;
+color:#aaa;
 }
 
 a{
@@ -122,45 +134,45 @@ cursor:pointer;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div id="notify"></div>
+<div class="header">
 
 <div class="menuBtn" onclick="toggleMenu()">☰</div>
 
+<div>🔔</div>
+
+<div class="credit">9990 Credits</div>
+
+</div>
+
 <div class="sidebar" id="menu">
+
 <h3>Menu</h3>
-<button onclick="showMain()">Home</button>
+
+<button onclick="showDashboard()">Dashboard</button>
+
 <button onclick="logout()">Logout</button>
+
 </div>
 
 <div id="app"></div>
 
 <script>
 
-/* notification */
-
-function notify(msg){
-
-let box=document.getElementById("notify")
-
-box.innerText=msg
-box.style.display="block"
-
-setTimeout(()=>{
-box.style.display="none"
-},3000)
-
-}
-
 /* start */
 
 if(localStorage.getItem("login")=="true"){
-showMain()
+
+showDashboard()
+
 }else{
+
 showLogin()
+
 }
 
 /* menu */
@@ -170,9 +182,13 @@ function toggleMenu(){
 let menu=document.getElementById("menu")
 
 if(menu.style.left=="0px"){
-menu.style.left="-220px"
+
+menu.style.left="-240px"
+
 }else{
+
 menu.style.left="0px"
+
 }
 
 }
@@ -213,7 +229,7 @@ document.getElementById("app").innerHTML=`
 
 <div class="box">
 
-<h1>Create Account</h1>
+<h1>Register</h1>
 
 <input id="user" placeholder="Username">
 
@@ -233,49 +249,61 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* main */
+/* dashboard */
 
-function showMain(){
+function showDashboard(){
+
+let user=localStorage.getItem("username")
 
 document.getElementById("app").innerHTML=`
 
-<div class="box" id="uidPanel">
+<div class="mainCard">
 
-<h1>🔥 Guild Glory Boost</h1>
+<h3>Hello user 👋</h3>
 
-<p>Enter UID to Unlock Boost</p>
+<div class="username">${user}</div>
 
-<input id="uid" placeholder="Enter UID">
+<p>Welcome to Badal Guild Glory bot</p>
 
-<br>
-
-<button onclick="submitUID()">Submit UID</button>
+<p id="time"></p>
 
 </div>
 
-<div class="card" id="card1">
-<h2>120K → 200K Glory</h2>
-<p>Delivery 30 Minutes</p>
-<button onclick="boost()">Boost Now</button>
-</div>
+<div class="grid">
 
-<div class="card" id="card2">
-<h2>200K → 400K Glory</h2>
-<p>Delivery 1 Hour</p>
-<button onclick="boost()">Boost Now</button>
-</div>
+<div class="card">📱 V2439<span>Mobile</span></div>
 
-<div class="card" id="card3">
-<h2>400K → 800K Glory</h2>
-<p>Delivery 2 Hours</p>
-<button onclick="boost()">Boost Now</button>
+<div class="card">🌐 IP<span>Address</span></div>
+
+<div class="card">💻 Chrome<span>Browser</span></div>
+
+<div class="card">📦 Android<span>OS</span></div>
+
+<div class="card">📶 3G<span>Internet</span></div>
+
+<div class="card">🔋 33%<span>Battery</span></div>
+
+<div class="card">📺 393x870<span>Screen</span></div>
+
+<div class="card">🧠 8 Core<span>CPU</span></div>
+
+<div class="card">🌍 EN<span>Language</span></div>
+
+<div class="card">🎮 3<span>Total Orders</span></div>
+
+<div class="card">🏆 3<span>Success</span></div>
+
+<div class="card">🔥 0<span>Failed</span></div>
+
 </div>
 
 `
 
+updateTime()
+
 }
 
-/* register function */
+/* register */
 
 function register(){
 
@@ -285,13 +313,13 @@ let p=document.getElementById("pass").value
 localStorage.setItem("username",u)
 localStorage.setItem("password",p)
 
-notify("Account Created")
+alert("Account Created")
 
 showLogin()
 
 }
 
-/* login function */
+/* login */
 
 function login(){
 
@@ -305,48 +333,13 @@ if(u==su && p==sp){
 
 localStorage.setItem("login","true")
 
-notify("Login Success")
-
-showMain()
+showDashboard()
 
 }else{
 
-notify("Wrong Username or Password")
+alert("Wrong Username or Password")
 
 }
-
-}
-
-/* uid submit */
-
-function submitUID(){
-
-let uid=document.getElementById("uid").value
-
-if(uid==""){
-notify("Enter UID First")
-return
-}
-
-/* hide panel */
-
-document.getElementById("uidPanel").style.display="none"
-
-/* show cards */
-
-document.getElementById("card1").style.display="block"
-document.getElementById("card2").style.display="block"
-document.getElementById("card3").style.display="block"
-
-notify("UID Submitted")
-
-}
-
-/* boost */
-
-function boost(){
-
-notify("Boost Request Received")
 
 }
 
@@ -356,9 +349,21 @@ function logout(){
 
 localStorage.removeItem("login")
 
-notify("Logged Out")
-
 location.reload()
+
+}
+
+/* time */
+
+function updateTime(){
+
+setInterval(()=>{
+
+let now=new Date()
+
+document.getElementById("time").innerText=now.toLocaleString()
+
+},1000)
 
 }
 
