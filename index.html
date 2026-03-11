@@ -20,35 +20,7 @@ text-align:center;
 100%{background-position:100%}
 }
 
-/* menu */
-
-.menuBtn{
-position:fixed;
-top:20px;
-right:20px;
-font-size:28px;
-cursor:pointer;
-display:none;
-}
-
-.sidebar{
-position:fixed;
-top:0;
-right:-200px;
-width:200px;
-height:100%;
-background:#111;
-padding:20px;
-transition:0.3s;
-box-shadow:0 0 20px cyan;
-}
-
-.sidebar button{
-width:100%;
-margin-top:20px;
-}
-
-/* box */
+/* BOX */
 
 .box{
 background:#111;
@@ -58,7 +30,7 @@ border-radius:15px;
 box-shadow:0 0 20px cyan;
 }
 
-/* input */
+/* INPUT */
 
 input{
 padding:12px;
@@ -70,18 +42,18 @@ background:black;
 color:white;
 }
 
-/* button */
+/* BUTTON */
 
 button{
 padding:10px 20px;
 background:linear-gradient(45deg,orange,magenta);
 border:none;
-color:white;
 border-radius:6px;
+color:white;
 cursor:pointer;
 }
 
-/* cards */
+/* BOOST CARD */
 
 .card{
 background:#111;
@@ -92,7 +64,39 @@ box-shadow:0 0 20px purple;
 display:none;
 }
 
-/* notification */
+/* FLOAT MENU */
+
+.menuBtn{
+position:fixed;
+bottom:25px;
+right:25px;
+width:55px;
+height:55px;
+border-radius:50%;
+background:linear-gradient(45deg,cyan,magenta);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+cursor:pointer;
+box-shadow:0 0 20px cyan;
+}
+
+/* SIDE MENU */
+
+.sidebar{
+position:fixed;
+top:0;
+right:-220px;
+width:220px;
+height:100%;
+background:#111;
+padding:20px;
+transition:0.3s;
+box-shadow:-5px 0 20px cyan;
+}
+
+/* NOTIFICATION */
 
 #notify{
 position:fixed;
@@ -100,13 +104,13 @@ top:20px;
 left:50%;
 transform:translateX(-50%);
 background:linear-gradient(45deg,cyan,magenta);
-color:white;
-padding:15px 30px;
+padding:15px 25px;
 border-radius:10px;
-font-weight:bold;
 display:none;
 box-shadow:0 0 20px cyan;
 }
+
+/* LINK */
 
 a{
 color:cyan;
@@ -121,7 +125,11 @@ cursor:pointer;
 
 <div id="notify"></div>
 
-<div class="menuBtn" id="menuBtn" onclick="menuToggle()">☰</div>
+<!-- MENU BUTTON -->
+
+<div class="menuBtn" onclick="toggleMenu()">⚙</div>
+
+<!-- SIDEBAR -->
 
 <div class="sidebar" id="menu">
 <h3>Menu</h3>
@@ -132,7 +140,7 @@ cursor:pointer;
 
 <script>
 
-/* notification */
+/* NOTIFY */
 
 function notify(msg){
 
@@ -147,7 +155,7 @@ box.style.display="none"
 
 }
 
-/* start */
+/* START */
 
 if(localStorage.getItem("login")=="true"){
 showMain()
@@ -155,11 +163,9 @@ showMain()
 showLogin()
 }
 
-/* LOGIN */
+/* LOGIN PAGE */
 
 function showLogin(){
-
-document.getElementById("menuBtn").style.display="none"
 
 document.getElementById("app").innerHTML=`
 
@@ -173,7 +179,7 @@ document.getElementById("app").innerHTML=`
 
 <input id="pass" type="password" placeholder="Password">
 
-<br>
+<br><br>
 
 <button onclick="login()">Login</button>
 
@@ -185,7 +191,7 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* REGISTER */
+/* REGISTER PAGE */
 
 function showRegister(){
 
@@ -201,7 +207,7 @@ document.getElementById("app").innerHTML=`
 
 <input id="pass" type="password" placeholder="Password">
 
-<br>
+<br><br>
 
 <button onclick="register()">Register</button>
 
@@ -213,15 +219,13 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* MAIN */
+/* MAIN PAGE */
 
 function showMain(){
 
-document.getElementById("menuBtn").style.display="block"
-
 document.getElementById("app").innerHTML=`
 
-<div class="box">
+<div class="box" id="uidPanel">
 
 <h1>🔥 Guild Glory Boost</h1>
 
@@ -229,7 +233,7 @@ document.getElementById("app").innerHTML=`
 
 <input id="uid" placeholder="Enter UID">
 
-<br>
+<br><br>
 
 <button onclick="submitUID()">Submit UID</button>
 
@@ -257,7 +261,7 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* REGISTER FUNCTION */
+/* REGISTER */
 
 function register(){
 
@@ -273,7 +277,7 @@ showLogin()
 
 }
 
-/* LOGIN FUNCTION */
+/* LOGIN */
 
 function login(){
 
@@ -299,30 +303,22 @@ notify("Wrong Username or Password ❌")
 
 }
 
-/* MENU */
-
-function menuToggle(){
-
-let menu=document.getElementById("menu")
-
-if(menu.style.right=="0px"){
-menu.style.right="-200px"
-}else{
-menu.style.right="0px"
-}
-
-}
-
-/* UID */
+/* UID SUBMIT */
 
 function submitUID(){
 
 let uid=document.getElementById("uid").value
 
 if(uid==""){
-notify("Enter UID first")
+notify("Enter UID First")
 return
 }
+
+/* HIDE UID PANEL */
+
+document.getElementById("uidPanel").style.display="none"
+
+/* SHOW BOOST */
 
 document.getElementById("card1").style.display="block"
 document.getElementById("card2").style.display="block"
@@ -340,6 +336,20 @@ notify("Boost Request Received 🔥")
 
 }
 
+/* MENU */
+
+function toggleMenu(){
+
+let menu=document.getElementById("menu")
+
+if(menu.style.right=="0px"){
+menu.style.right="-220px"
+}else{
+menu.style.right="0px"
+}
+
+}
+
 /* LOGOUT */
 
 function logout(){
@@ -348,7 +358,7 @@ localStorage.removeItem("login")
 
 notify("Logged Out")
 
-showLogin()
+location.reload()
 
 }
 
