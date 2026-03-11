@@ -1,98 +1,307 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Guild Glory Boost</title>
-<link rel="stylesheet" href="style.css">
+<title>Pro Guild Boost</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(270deg,#0f0c29,#302b63,#24243e);
+background-size:600% 600%;
+animation:bgMove 10s infinite alternate;
+color:white;
+text-align:center;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+100%{background-position:100% 50%;}
+}
+
+h1{
+font-size:35px;
+text-shadow:0 0 20px cyan;
+}
+
+/* container */
+
+.box{
+background:rgba(0,0,0,0.6);
+padding:30px;
+margin:30px;
+border-radius:15px;
+box-shadow:0 0 20px #00ffff;
+}
+
+/* input */
+
+input{
+padding:12px;
+margin:10px;
+width:220px;
+border:none;
+border-radius:6px;
+outline:none;
+background:black;
+color:white;
+border:2px solid cyan;
+animation:inputGlow 3s infinite alternate;
+}
+
+@keyframes inputGlow{
+
+0%{box-shadow:0 0 5px cyan;}
+50%{box-shadow:0 0 20px magenta;}
+100%{box-shadow:0 0 25px orange;}
+
+}
+
+/* button */
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:8px;
+background:linear-gradient(45deg,orange,magenta);
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+box-shadow:0 0 20px cyan;
+}
+
+/* cards */
+
+.card{
+background:rgba(0,0,0,0.7);
+margin:20px;
+padding:20px;
+border-radius:12px;
+box-shadow:0 0 20px purple;
+}
+
+a{
+color:cyan;
+cursor:pointer;
+}
+
+</style>
+
 </head>
 
 <body>
+
+<div id="app"></div>
+
 <script>
 
-if(localStorage.getItem("login")!="true"){
+/* start */
 
-window.location="login.html"
+if(localStorage.getItem("login")=="true"){
+showMain()
+}else{
+showLogin()
+}
+
+/* LOGIN PAGE */
+
+function showLogin(){
+
+document.getElementById("app").innerHTML=`
+
+<div class="box">
+
+<h1>Login</h1>
+
+<input id="user" placeholder="Username">
+
+<br>
+
+<input id="pass" type="password" placeholder="Password">
+
+<br>
+
+<button onclick="login()">Login</button>
+
+<p>No account? <a onclick="showRegister()">Register</a></p>
+
+</div>
+
+`
 
 }
 
-</script>
+/* REGISTER PAGE */
+
+function showRegister(){
+
+document.getElementById("app").innerHTML=`
+
+<div class="box">
+
+<h1>Create Account</h1>
+
+<input id="user" placeholder="Username">
+
+<br>
+
+<input id="pass" type="password" placeholder="Password">
+
+<br>
+
+<button onclick="register()">Register</button>
+
+<p>Already account? <a onclick="showLogin()">Login</a></p>
+
+</div>
+
+`
+
+}
+
+/* MAIN WEBSITE */
+
+function showMain(){
+
+document.getElementById("app").innerHTML=`
+
+<div class="box">
+
 <button onclick="logout()">Logout</button>
 
-<script>
-function logout(){
-
-localStorage.removeItem("login")
-
-window.location="login.html"
-
-}
-</script>
-  
-  
-<header>
-
 <h1>🔥 Guild Glory Boost</h1>
-<p>Fast & Secure Free Fire Guild Boost</p>
-<script>
-if(localStorage.getItem("login")!="true"){
-window.location="login.html";
-}
-</script>
-  
-</header>
 
-<section class="packages">
+<p>Fast & Secure Boost System</p>
+
+<input id="uid" placeholder="Enter Free Fire UID">
+
+<br>
+
+<button onclick="submitUID()">Submit UID</button>
+
+</div>
 
 <div class="card">
 
 <h2>120K → 200K Glory</h2>
-<p>Delivery: 30 Minutes</p>
+
+<p>Delivery 30 Minutes</p>
+
 <button onclick="boost()">Boost Now</button>
-  
+
 </div>
 
 <div class="card">
 
 <h2>200K → 400K Glory</h2>
-<p>Delivery: 1 Hour</p>
-<button onclick="boost()">Boost Now</button>
 
+<p>Delivery 1 Hour</p>
+
+<button onclick="boost()">Boost Now</button>
 
 </div>
 
 <div class="card">
 
 <h2>400K → 800K Glory</h2>
-<p>Delivery: 2 Hours</p>
-<button onclick="boost()">Boost Now</button>
 
+<p>Delivery 2 Hours</p>
+
+<button onclick="boost()">Boost Now</button>
 
 </div>
 
-</section>
-
-<section class="activity">
-
-<h2>Live Activity</h2>
+<h3>Live Activity</h3>
 
 <p>Player123 boosted guild</p>
+
 <p>Rahul boosted guild</p>
+
 <p>Dragon boosted guild</p>
 
-</section>
+`
 
-<footer>
-
-<p>Website powered by BADAL Tools</p>
-
-</footer>
-
-<script>
-function boost(){
-alert("Button Working ✅");
 }
+
+/* REGISTER */
+
+function register(){
+
+let u=document.getElementById("user").value
+let p=document.getElementById("pass").value
+
+localStorage.setItem("username",u)
+localStorage.setItem("password",p)
+
+alert("Account Created")
+
+showLogin()
+
+}
+
+/* LOGIN */
+
+function login(){
+
+let u=document.getElementById("user").value
+let p=document.getElementById("pass").value
+
+let su=localStorage.getItem("username")
+let sp=localStorage.getItem("password")
+
+if(u==su && p==sp){
+
+localStorage.setItem("login","true")
+
+showMain()
+
+}else{
+
+alert("Wrong Username")
+
+}
+
+}
+
+/* LOGOUT */
+
+function logout(){
+
+localStorage.removeItem("login")
+
+showLogin()
+
+}
+
+/* UID */
+
+function submitUID(){
+
+let uid=document.getElementById("uid").value
+
+if(uid==""){
+alert("Enter UID first")
+}else{
+alert("UID "+uid+" Submitted 🚀")
+}
+
+}
+
+/* BOOST */
+
+function boost(){
+
+alert("Boost Request Received 🔥")
+
+}
+
 </script>
 
 </body>
 </html>
-
-
