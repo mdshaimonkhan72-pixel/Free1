@@ -15,7 +15,18 @@ window.location="login.html"
 }
 
 </script>
+<button onclick="logout()">Logout</button>
 
+<script>
+function logout(){
+
+localStorage.removeItem("login")
+
+window.location="login.html"
+
+}
+</script>
+  
   
 <header>
 
