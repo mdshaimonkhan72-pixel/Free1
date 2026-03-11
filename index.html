@@ -16,20 +16,42 @@ text-align:center;
 }
 
 @keyframes bgMove{
-0%{background-position:0% 50%;}
-100%{background-position:100% 50%;}
+0%{background-position:0%}
+100%{background-position:100%}
 }
 
-h1{
-text-shadow:0 0 20px cyan;
+/* menu */
+
+.menuBtn{
+position:fixed;
+top:20px;
+right:20px;
+font-size:30px;
+cursor:pointer;
+display:none;
+}
+
+.sidebar{
+position:fixed;
+top:0;
+right:-200px;
+width:200px;
+height:100%;
+background:#111;
+padding:20px;
+transition:0.3s;
+}
+
+.sidebar button{
+width:100%;
 }
 
 /* box */
 
 .box{
-background:rgba(0,0,0,0.6);
+background:#111;
+margin:40px;
 padding:30px;
-margin:30px;
 border-radius:15px;
 box-shadow:0 0 20px cyan;
 }
@@ -44,57 +66,28 @@ border-radius:6px;
 border:2px solid cyan;
 background:black;
 color:white;
-outline:none;
-animation:glow 3s infinite alternate;
-}
-
-@keyframes glow{
-0%{box-shadow:0 0 5px cyan;}
-50%{box-shadow:0 0 15px magenta;}
-100%{box-shadow:0 0 25px orange;}
 }
 
 /* button */
 
 button{
-padding:12px 25px;
-border:none;
-border-radius:8px;
+padding:10px 20px;
 background:linear-gradient(45deg,orange,magenta);
+border:none;
 color:white;
-font-weight:bold;
+border-radius:6px;
 cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-transform:scale(1.1);
-box-shadow:0 0 20px cyan;
 }
 
 /* cards */
 
 .card{
-background:rgba(0,0,0,0.7);
+background:#111;
 margin:20px;
 padding:20px;
-border-radius:12px;
-box-shadow:0 0 20px purple;
-}
-
-/* notification */
-
-#notify{
-position:fixed;
-top:20px;
-left:50%;
-transform:translateX(-50%);
-background:linear-gradient(45deg,cyan,magenta);
-padding:15px 30px;
 border-radius:10px;
-font-weight:bold;
+box-shadow:0 0 20px purple;
 display:none;
-box-shadow:0 0 20px cyan;
 }
 
 a{
@@ -108,26 +101,16 @@ cursor:pointer;
 
 <body>
 
-<div id="notify"></div>
+<div class="menuBtn" id="menuBtn" onclick="menuToggle()">☰</div>
+
+<div class="sidebar" id="menu">
+<h3>Menu</h3>
+<button onclick="logout()">Logout</button>
+</div>
 
 <div id="app"></div>
 
 <script>
-
-/* notification */
-
-function notify(msg){
-
-let box=document.getElementById("notify")
-
-box.innerText=msg
-box.style.display="block"
-
-setTimeout(()=>{
-box.style.display="none"
-},3000)
-
-}
 
 /* start */
 
@@ -140,6 +123,8 @@ showLogin()
 /* LOGIN PAGE */
 
 function showLogin(){
+
+document.getElementById("menuBtn").style.display="none"
 
 document.getElementById("app").innerHTML=`
 
@@ -197,15 +182,15 @@ document.getElementById("app").innerHTML=`
 
 function showMain(){
 
+document.getElementById("menuBtn").style.display="block"
+
 document.getElementById("app").innerHTML=`
 
 <div class="box">
 
-<button onclick="logout()">Logout</button>
-
 <h1>🔥 Guild Glory Boost</h1>
 
-<p>Fast & Secure Boost System</p>
+<p>Enter UID to Unlock Boost</p>
 
 <input id="uid" placeholder="Enter UID">
 
@@ -215,7 +200,7 @@ document.getElementById("app").innerHTML=`
 
 </div>
 
-<div class="card">
+<div class="card" id="card1">
 
 <h2>120K → 200K Glory</h2>
 
@@ -225,7 +210,7 @@ document.getElementById("app").innerHTML=`
 
 </div>
 
-<div class="card">
+<div class="card" id="card2">
 
 <h2>200K → 400K Glory</h2>
 
@@ -235,7 +220,7 @@ document.getElementById("app").innerHTML=`
 
 </div>
 
-<div class="card">
+<div class="card" id="card3">
 
 <h2>400K → 800K Glory</h2>
 
@@ -244,12 +229,6 @@ document.getElementById("app").innerHTML=`
 <button onclick="boost()">Boost Now</button>
 
 </div>
-
-<h3>Live Activity</h3>
-
-<p>Player123 boosted guild</p>
-<p>Rahul boosted guild</p>
-<p>Dragon boosted guild</p>
 
 `
 
@@ -262,15 +241,10 @@ function register(){
 let u=document.getElementById("user").value
 let p=document.getElementById("pass").value
 
-if(u=="" || p==""){
-notify("Enter Username & Password")
-return
-}
-
 localStorage.setItem("username",u)
 localStorage.setItem("password",p)
 
-notify("Account Created ✅")
+alert("Account Created")
 
 showLogin()
 
@@ -290,27 +264,27 @@ if(u==su && p==sp){
 
 localStorage.setItem("login","true")
 
-notify("Login Success 🎉")
-
 showMain()
 
 }else{
 
-notify("Wrong Username or Password ❌")
+alert("Wrong Username or Password")
 
 }
 
 }
 
-/* LOGOUT */
+/* MENU */
 
-function logout(){
+function menuToggle(){
 
-localStorage.removeItem("login")
+let menu=document.getElementById("menu")
 
-notify("Logged Out")
-
-showLogin()
+if(menu.style.right=="0px"){
+menu.style.right="-200px"
+}else{
+menu.style.right="0px"
+}
 
 }
 
@@ -321,10 +295,13 @@ function submitUID(){
 let uid=document.getElementById("uid").value
 
 if(uid==""){
-notify("Enter UID first")
-}else{
-notify("UID "+uid+" Submitted 🚀")
+alert("Enter UID first")
+return
 }
+
+document.getElementById("card1").style.display="block"
+document.getElementById("card2").style.display="block"
+document.getElementById("card3").style.display="block"
 
 }
 
@@ -332,7 +309,17 @@ notify("UID "+uid+" Submitted 🚀")
 
 function boost(){
 
-notify("Boost Request Received 🔥")
+alert("Boost Request Received 🔥")
+
+}
+
+/* LOGOUT */
+
+function logout(){
+
+localStorage.removeItem("login")
+
+showLogin()
 
 }
 
