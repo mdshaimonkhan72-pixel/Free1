@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Panel</title>
+
+<style>
+
+body{
+background:#0a0025;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+.header{
+background:#120040;
+padding:20px;
+text-align:center;
+font-size:22px;
+}
+
+.card{
+background:#1a0055;
+padding:20px;
+margin:20px;
+border-radius:10px;
+box-shadow:0 0 15px purple;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:linear-gradient(45deg,cyan,magenta);
+color:white;
+cursor:pointer;
+margin:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">Admin Dashboard</div>
+
+<div class="card">
+
+<h3>Server Maintenance</h3>
+
+<button onclick="on()">Turn ON</button>
+
+<button onclick="off()">Turn OFF</button>
+
+</div>
+
+<div class="card">
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+
+function on(){
+
+localStorage.setItem("maintenance","on")
+
+alert("Maintenance Enabled")
+
+}
+
+function off(){
+
+localStorage.removeItem("maintenance")
+
+alert("Maintenance Disabled")
+
+}
+
+function logout(){
+
+location.href="index.html"
+
+}
+
+</script>
+
+</body>
+</html>
+
