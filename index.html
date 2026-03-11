@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guild Glory Boost</title>
 
 <style>
@@ -10,93 +11,17 @@ margin:0;
 font-family:Arial;
 background:linear-gradient(270deg,#0f0c29,#302b63,#24243e);
 background-size:600% 600%;
-animation:bgMove 10s infinite alternate;
+animation:bg 10s infinite alternate;
 color:white;
 text-align:center;
 }
 
-@keyframes bgMove{
+@keyframes bg{
 0%{background-position:0%}
 100%{background-position:100%}
 }
 
-/* BOX */
-
-.box{
-background:#111;
-margin:40px;
-padding:30px;
-border-radius:15px;
-box-shadow:0 0 20px cyan;
-}
-
-/* INPUT */
-
-input{
-padding:12px;
-margin:10px;
-width:220px;
-border-radius:6px;
-border:2px solid cyan;
-background:black;
-color:white;
-}
-
-/* BUTTON */
-
-button{
-padding:10px 20px;
-background:linear-gradient(45deg,orange,magenta);
-border:none;
-border-radius:6px;
-color:white;
-cursor:pointer;
-}
-
-/* BOOST CARD */
-
-.card{
-background:#111;
-margin:20px;
-padding:20px;
-border-radius:10px;
-box-shadow:0 0 20px purple;
-display:none;
-}
-
-/* FLOAT MENU */
-
-.menuBtn{
-position:fixed;
-bottom:25px;
-right:25px;
-width:55px;
-height:55px;
-border-radius:50%;
-background:linear-gradient(45deg,cyan,magenta);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
-cursor:pointer;
-box-shadow:0 0 20px cyan;
-}
-
-/* SIDE MENU */
-
-.sidebar{
-position:fixed;
-top:0;
-right:-220px;
-width:220px;
-height:100%;
-background:#111;
-padding:20px;
-transition:0.3s;
-box-shadow:-5px 0 20px cyan;
-}
-
-/* NOTIFICATION */
+/* notification */
 
 #notify{
 position:fixed;
@@ -110,7 +35,86 @@ display:none;
 box-shadow:0 0 20px cyan;
 }
 
-/* LINK */
+/* side menu */
+
+.sidebar{
+position:fixed;
+left:-220px;
+top:0;
+width:220px;
+height:100%;
+background:#111;
+padding:20px;
+transition:0.3s;
+box-shadow:5px 0 20px cyan;
+}
+
+.sidebar h3{
+margin-top:0;
+}
+
+/* menu button */
+
+.menuBtn{
+position:fixed;
+left:15px;
+top:50%;
+transform:translateY(-50%);
+background:linear-gradient(45deg,cyan,magenta);
+width:55px;
+height:55px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:26px;
+cursor:pointer;
+box-shadow:0 0 20px cyan;
+}
+
+/* box */
+
+.box{
+background:#111;
+margin:40px;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 20px cyan;
+}
+
+/* input */
+
+input{
+padding:12px;
+width:220px;
+border-radius:6px;
+border:2px solid cyan;
+background:black;
+color:white;
+}
+
+/* button */
+
+button{
+padding:10px 20px;
+background:linear-gradient(45deg,orange,magenta);
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+margin-top:10px;
+}
+
+/* cards */
+
+.card{
+background:#111;
+margin:20px;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 20px purple;
+display:none;
+}
 
 a{
 color:cyan;
@@ -118,21 +122,17 @@ cursor:pointer;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div id="notify"></div>
 
-<!-- MENU BUTTON -->
-
-<div class="menuBtn" onclick="toggleMenu()">⚙</div>
-
-<!-- SIDEBAR -->
+<div class="menuBtn" onclick="toggleMenu()">☰</div>
 
 <div class="sidebar" id="menu">
 <h3>Menu</h3>
+<button onclick="showMain()">Home</button>
 <button onclick="logout()">Logout</button>
 </div>
 
@@ -140,7 +140,7 @@ cursor:pointer;
 
 <script>
 
-/* NOTIFY */
+/* notification */
 
 function notify(msg){
 
@@ -155,7 +155,7 @@ box.style.display="none"
 
 }
 
-/* START */
+/* start */
 
 if(localStorage.getItem("login")=="true"){
 showMain()
@@ -163,7 +163,21 @@ showMain()
 showLogin()
 }
 
-/* LOGIN PAGE */
+/* menu */
+
+function toggleMenu(){
+
+let menu=document.getElementById("menu")
+
+if(menu.style.left=="0px"){
+menu.style.left="-220px"
+}else{
+menu.style.left="0px"
+}
+
+}
+
+/* login */
 
 function showLogin(){
 
@@ -179,7 +193,7 @@ document.getElementById("app").innerHTML=`
 
 <input id="pass" type="password" placeholder="Password">
 
-<br><br>
+<br>
 
 <button onclick="login()">Login</button>
 
@@ -191,7 +205,7 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* REGISTER PAGE */
+/* register */
 
 function showRegister(){
 
@@ -207,7 +221,7 @@ document.getElementById("app").innerHTML=`
 
 <input id="pass" type="password" placeholder="Password">
 
-<br><br>
+<br>
 
 <button onclick="register()">Register</button>
 
@@ -219,7 +233,7 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* MAIN PAGE */
+/* main */
 
 function showMain(){
 
@@ -233,7 +247,7 @@ document.getElementById("app").innerHTML=`
 
 <input id="uid" placeholder="Enter UID">
 
-<br><br>
+<br>
 
 <button onclick="submitUID()">Submit UID</button>
 
@@ -261,7 +275,7 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* REGISTER */
+/* register function */
 
 function register(){
 
@@ -271,13 +285,13 @@ let p=document.getElementById("pass").value
 localStorage.setItem("username",u)
 localStorage.setItem("password",p)
 
-notify("Account Created ✅")
+notify("Account Created")
 
 showLogin()
 
 }
 
-/* LOGIN */
+/* login function */
 
 function login(){
 
@@ -291,19 +305,19 @@ if(u==su && p==sp){
 
 localStorage.setItem("login","true")
 
-notify("Login Success 🎉")
+notify("Login Success")
 
 showMain()
 
 }else{
 
-notify("Wrong Username or Password ❌")
+notify("Wrong Username or Password")
 
 }
 
 }
 
-/* UID SUBMIT */
+/* uid submit */
 
 function submitUID(){
 
@@ -314,43 +328,29 @@ notify("Enter UID First")
 return
 }
 
-/* HIDE UID PANEL */
+/* hide panel */
 
 document.getElementById("uidPanel").style.display="none"
 
-/* SHOW BOOST */
+/* show cards */
 
 document.getElementById("card1").style.display="block"
 document.getElementById("card2").style.display="block"
 document.getElementById("card3").style.display="block"
 
-notify("UID Submitted 🚀")
+notify("UID Submitted")
 
 }
 
-/* BOOST */
+/* boost */
 
 function boost(){
 
-notify("Boost Request Received 🔥")
+notify("Boost Request Received")
 
 }
 
-/* MENU */
-
-function toggleMenu(){
-
-let menu=document.getElementById("menu")
-
-if(menu.style.right=="0px"){
-menu.style.right="-220px"
-}else{
-menu.style.right="0px"
-}
-
-}
-
-/* LOGOUT */
+/* logout */
 
 function logout(){
 
