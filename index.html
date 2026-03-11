@@ -4,23 +4,15 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Guild Glory Bot</title>
+<title>Gaming Panel</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:linear-gradient(270deg,#0b0620,#1a0f3d,#0b0620);
-background-size:600% 600%;
-animation:bg 10s infinite alternate;
+background:linear-gradient(120deg,#070021,#120038,#070021);
 color:white;
-text-align:center;
-}
-
-@keyframes bg{
-0%{background-position:0%}
-100%{background-position:100%}
 }
 
 /* header */
@@ -30,7 +22,8 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 padding:15px;
-background:#0c0820;
+background:#09002b;
+box-shadow:0 0 20px purple;
 }
 
 .menuBtn{
@@ -39,20 +32,20 @@ cursor:pointer;
 display:none;
 }
 
-/* dropdown menu */
+/* menu */
 
-.dropdown{
+.menu{
 display:none;
 position:absolute;
 top:60px;
 left:15px;
-background:#111;
+background:#120040;
 padding:15px;
-border-radius:10px;
+border-radius:12px;
 box-shadow:0 0 25px purple;
 }
 
-.dropdown button{
+.menu button{
 display:block;
 width:160px;
 margin:8px 0;
@@ -64,47 +57,55 @@ color:white;
 cursor:pointer;
 }
 
-/* login box */
+/* box */
 
 .box{
-background:#0d0922;
-margin:40px;
+width:90%;
+max-width:360px;
+margin:70px auto;
 padding:30px;
+background:#0c0030;
 border-radius:15px;
-box-shadow:0 0 30px purple;
+box-shadow:0 0 35px purple;
+text-align:center;
 }
 
 input{
+width:90%;
 padding:12px;
-width:220px;
-border-radius:6px;
+margin:10px;
+border-radius:8px;
 border:2px solid cyan;
 background:black;
 color:white;
-margin:10px;
 }
 
 button{
-padding:10px 20px;
-background:linear-gradient(45deg,orange,magenta);
+padding:10px 25px;
 border:none;
-border-radius:6px;
+border-radius:8px;
+background:linear-gradient(45deg,orange,magenta);
 color:white;
 cursor:pointer;
 }
 
-a{
-color:cyan;
-cursor:pointer;
+.msg{
+margin:10px;
+font-size:14px;
 }
 
-/* dashboard */
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+padding:20px;
+}
 
 .card{
-background:#0d0922;
-margin:20px;
+background:#0a0030;
 padding:20px;
 border-radius:15px;
+text-align:center;
 box-shadow:0 0 20px purple;
 }
 
@@ -118,15 +119,19 @@ box-shadow:0 0 20px purple;
 
 <div class="menuBtn" id="menuBtn" onclick="toggleMenu()">☰</div>
 
-<div>🔔</div>
+<div>🎮 Gaming Panel</div>
 
 <div>9990 Credits</div>
 
 </div>
 
-<div class="dropdown" id="menu">
+<div class="menu" id="menu">
 
-<button onclick="showDashboard()">Dashboard</button>
+<button onclick="dashboard()">Dashboard</button>
+
+<button onclick="orders()">Orders</button>
+
+<button onclick="profile()">Profile</button>
 
 <button onclick="logout()">Logout</button>
 
@@ -136,40 +141,65 @@ box-shadow:0 0 20px purple;
 
 <script>
 
-/* start */
+/* MAINTENANCE CHECK */
 
-if(localStorage.getItem("login")=="true"){
+if(localStorage.getItem("maintenance")==="on"){
 
-document.getElementById("menuBtn").style.display="block"
-showDashboard()
+document.body.innerHTML=`
 
-}else{
+<div style="
 
-showLogin()
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+flex-direction:column;
+background:black;
+color:white;
+font-family:Arial;
+text-align:center;
+
+">
+
+<h1>🚧 Server Maintenance</h1>
+
+<p>Website is under maintenance</p>
+
+</div>
+
+`
+
+throw new Error("Maintenance Mode")
 
 }
 
-/* menu toggle */
+/* START */
+
+if(localStorage.getItem("login")==="true"){
+
+document.getElementById("menuBtn").style.display="block"
+
+dashboard()
+
+}else{
+
+loginPage()
+
+}
+
+/* MENU */
 
 function toggleMenu(){
 
-let menu=document.getElementById("menu")
+let m=document.getElementById("menu")
 
-if(menu.style.display=="block"){
-
-menu.style.display="none"
-
-}else{
-
-menu.style.display="block"
+m.style.display = m.style.display==="block" ? "none":"block"
 
 }
 
-}
+/* LOGIN PAGE */
 
-/* login */
-
-function showLogin(){
+function loginPage(){
 
 document.getElementById("menuBtn").style.display="none"
 
@@ -177,19 +207,17 @@ document.getElementById("app").innerHTML=`
 
 <div class="box">
 
-<h1>Login</h1>
+<h2>Login</h2>
 
 <input id="user" placeholder="Username">
 
-<br>
-
 <input id="pass" type="password" placeholder="Password">
 
-<br>
+<div class="msg" id="msg"></div>
 
 <button onclick="login()">Login</button>
 
-<p>No account? <a onclick="showRegister()">Register</a></p>
+<p>No account? <span onclick="registerPage()" style="color:cyan;cursor:pointer;">Register</span></p>
 
 </div>
 
@@ -197,27 +225,25 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* register */
+/* REGISTER PAGE */
 
-function showRegister(){
+function registerPage(){
 
 document.getElementById("app").innerHTML=`
 
 <div class="box">
 
-<h1>Register</h1>
+<h2>Register</h2>
 
 <input id="user" placeholder="Username">
 
-<br>
-
 <input id="pass" type="password" placeholder="Password">
 
-<br>
+<div class="msg" id="msg"></div>
 
 <button onclick="register()">Register</button>
 
-<p>Already account? <a onclick="showLogin()">Login</a></p>
+<p>Already account? <span onclick="loginPage()" style="color:cyan;cursor:pointer;">Login</span></p>
 
 </div>
 
@@ -225,112 +251,116 @@ document.getElementById("app").innerHTML=`
 
 }
 
-/* dashboard */
-
-function showDashboard(){
-
-let user=localStorage.getItem("username")
-
-document.getElementById("app").innerHTML=`
-
-<div class="card">
-
-<h2>Hello ${user} 👋</h2>
-
-<p>Welcome to Guild Glory Bot</p>
-
-<p id="time"></p>
-
-</div>
-
-<div class="card">📱 Mobile Info</div>
-
-<div class="card">🌐 IP Address</div>
-
-<div class="card">💻 Browser</div>
-
-<div class="card">📦 OS</div>
-
-<div class="card">🔋 Battery</div>
-
-<div class="card">🎮 Total Orders</div>
-
-`
-
-updateTime()
-
-}
-
-/* register */
+/* REGISTER */
 
 function register(){
 
 let u=document.getElementById("user").value
 let p=document.getElementById("pass").value
 
-if(u=="" || p==""){
-
-alert("Fill all fields")
-return
-
-}
-
 localStorage.setItem("username",u)
 localStorage.setItem("password",p)
 
-alert("Account Created")
+document.getElementById("msg").innerHTML="Account Created"
 
-showLogin()
+setTimeout(loginPage,1000)
 
 }
 
-/* login */
+/* LOGIN */
 
 function login(){
 
 let u=document.getElementById("user").value
 let p=document.getElementById("pass").value
 
+if(u==="admin" && p==="admin123"){
+
+window.location="admin.html"
+return
+
+}
+
 let su=localStorage.getItem("username")
 let sp=localStorage.getItem("password")
 
-if(u==su && p==sp){
+if(u===su && p===sp){
 
 localStorage.setItem("login","true")
 
 document.getElementById("menuBtn").style.display="block"
 
-showDashboard()
+dashboard()
 
 }else{
 
-alert("Wrong Username or Password")
+document.getElementById("msg").innerHTML="Wrong Username or Password"
 
 }
 
 }
 
-/* logout */
+/* DASHBOARD */
+
+function dashboard(){
+
+let user=localStorage.getItem("username")
+
+document.getElementById("app").innerHTML=`
+
+<div style="text-align:center;padding:20px">
+
+<h2>Hello ${user}</h2>
+
+<p>Welcome to Gaming Panel</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card">📱 Device</div>
+
+<div class="card">🌐 IP</div>
+
+<div class="card">💻 Browser</div>
+
+<div class="card">🔋 Battery</div>
+
+<div class="card">🎮 Orders</div>
+
+<div class="card">✅ Success</div>
+
+</div>
+
+`
+
+}
+
+/* ORDERS */
+
+function orders(){
+
+document.getElementById("app").innerHTML="<h2 style='padding:20px'>No Orders</h2>"
+
+}
+
+/* PROFILE */
+
+function profile(){
+
+let user=localStorage.getItem("username")
+
+document.getElementById("app").innerHTML="<h2 style='padding:20px'>Username: "+user+"</h2>"
+
+}
+
+/* LOGOUT */
 
 function logout(){
 
 localStorage.removeItem("login")
 
 location.reload()
-
-}
-
-/* time */
-
-function updateTime(){
-
-setInterval(()=>{
-
-let now=new Date()
-
-document.getElementById("time").innerText=now.toLocaleString()
-
-},1000)
 
 }
 
