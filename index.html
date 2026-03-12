@@ -1,9 +1,11 @@
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Badal Guild Panel</title>
 
 <style>
@@ -53,7 +55,7 @@ background:#0f172a;
 }
 
 .content{
-padding:25px;
+padding:30px;
 }
 
 .card{
@@ -110,6 +112,7 @@ text-align:center;
 </head>
 
 <body>
+
 
 <div id="loginPage" class="auth">
 
@@ -185,6 +188,7 @@ text-align:center;
 let sidebar=document.getElementById("sidebar")
 let content=document.getElementById("content")
 
+
 function toggleMenu(){
 
 if(sidebar.style.left=="0px"){
@@ -194,6 +198,7 @@ sidebar.style.left="0px"
 }
 
 }
+
 
 document.addEventListener("click",function(e){
 
@@ -213,6 +218,7 @@ function showLogin(){
 loginPage.style.display="flex"
 registerPage.style.display="none"
 }
+
 
 function register(){
 
@@ -244,22 +250,23 @@ home()
 
 }else{
 
-alert("Wrong login")
+alert("Wrong Login")
 
 }
 
 }
+
 
 function logout(){
 location.reload()
 }
 
 
+
 function home(){
 
 let user=localStorage.getItem("user")
 let credits=localStorage.getItem("credits")
-
 let time=new Date().toLocaleTimeString()
 
 content.innerHTML=`
@@ -328,6 +335,7 @@ content.innerHTML=`
 }
 
 
+
 function dashboard(){
 
 let credits=localStorage.getItem("credits")
@@ -347,6 +355,7 @@ content.innerHTML=`
 }
 
 
+
 function guild(){
 
 content.innerHTML=`
@@ -364,6 +373,7 @@ content.innerHTML=`
 }
 
 
+
 function earn(){
 
 let credits=parseInt(localStorage.getItem("credits"))
@@ -379,6 +389,7 @@ home()
 }
 
 
+
 function daily(){
 
 let credits=parseInt(localStorage.getItem("credits"))
@@ -392,6 +403,7 @@ alert("Daily reward claimed")
 home()
 
 }
+
 
 
 function transfer(){
@@ -413,6 +425,7 @@ content.innerHTML=`
 }
 
 
+
 function send(){
 
 let a=parseInt(amount.value)
@@ -421,7 +434,6 @@ let credits=parseInt(localStorage.getItem("credits"))
 if(a<=credits){
 
 credits-=a
-
 localStorage.setItem("credits",credits)
 
 alert("Transfer Success")
@@ -435,6 +447,7 @@ alert("Not enough credits")
 }
 
 }
+
 
 
 function buy(){
@@ -456,6 +469,7 @@ content.innerHTML=`
 }
 
 
+
 function buyCredit(c){
 
 let credits=parseInt(localStorage.getItem("credits"))
@@ -471,6 +485,7 @@ home()
 }
 
 
+
 function admin(){
 
 content.innerHTML=`
@@ -479,7 +494,7 @@ content.innerHTML=`
 
 <h2>⚙ Admin Panel</h2>
 
-<p>Admin Tools Coming Soon</p>
+<p>Admin tools coming soon</p>
 
 </div>
 
