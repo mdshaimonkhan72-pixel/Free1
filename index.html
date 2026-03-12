@@ -1,370 +1,101 @@
-<!DOCTYPE html>
-<html>
-<head>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Gaming Panel</title>
-
-<style>
-
-body{
-margin:0;
-font-family:Arial;
-background:linear-gradient(120deg,#070021,#120038,#070021);
-color:white;
-}
-
-/* header */
-
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px;
-background:#09002b;
-box-shadow:0 0 20px purple;
-}
-
-.menuBtn{
-font-size:28px;
-cursor:pointer;
-display:none;
-}
-
-/* menu */
-
-.menu{
-display:none;
-position:absolute;
-top:60px;
-left:15px;
-background:#120040;
-padding:15px;
-border-radius:12px;
-box-shadow:0 0 25px purple;
-}
-
-.menu button{
-display:block;
-width:160px;
-margin:8px 0;
-padding:12px;
-border:none;
-border-radius:8px;
-background:linear-gradient(45deg,cyan,magenta);
-color:white;
-cursor:pointer;
-}
-
-/* box */
-
-.box{
-width:90%;
-max-width:360px;
-margin:70px auto;
-padding:30px;
-background:#0c0030;
-border-radius:15px;
-box-shadow:0 0 35px purple;
-text-align:center;
-}
-
-input{
-width:90%;
-padding:12px;
-margin:10px;
-border-radius:8px;
-border:2px solid cyan;
-background:black;
-color:white;
-}
-
-button{
-padding:10px 25px;
-border:none;
-border-radius:8px;
-background:linear-gradient(45deg,orange,magenta);
-color:white;
-cursor:pointer;
-}
-
-.msg{
-margin:10px;
-font-size:14px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-padding:20px;
-}
-
-.card{
-background:#0a0030;
-padding:20px;
-border-radius:15px;
-text-align:center;
-box-shadow:0 0 20px purple;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="header">
-
-<div class="menuBtn" id="menuBtn" onclick="toggleMenu()">☰</div>
-
-<div>🎮 Gaming Panel</div>
-
-<div>9990 Credits</div>
-
-</div>
-
-<div class="menu" id="menu">
-
-<button onclick="dashboard()">Dashboard</button>
-
-<button onclick="orders()">Orders</button>
-
-<button onclick="profile()">Profile</button>
-
-<button onclick="logout()">Logout</button>
-
-</div>
-
-<div id="app"></div>
-
-<script>
-
-/* MAINTENANCE CHECK */
-
-if(localStorage.getItem("maintenance")==="on"){
-
-document.body.innerHTML=`
-
-<div style="
-
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-flex-direction:column;
-background:black;
-color:white;
-font-family:Arial;
-text-align:center;
-
-">
-
-<h1>🚧 Server Maintenance</h1>
-
-<p>Website is under maintenance</p>
-
-</div>
-
-`
-
-throw new Error("Maintenance Mode")
-
-}
-
-/* START */
-
-if(localStorage.getItem("login")==="true"){
-
-document.getElementById("menuBtn").style.display="block"
-
-dashboard()
-
-}else{
-
-loginPage()
-
-}
-
-/* MENU */
-
-function toggleMenu(){
-
-let m=document.getElementById("menu")
-
-m.style.display = m.style.display==="block" ? "none":"block"
-
-}
-
-/* LOGIN PAGE */
-
-function loginPage(){
-
-document.getElementById("menuBtn").style.display="none"
-
-document.getElementById("app").innerHTML=`
-
-<div class="box">
-
-<h2>Login</h2>
-
-<input id="user" placeholder="Username">
-
-<input id="pass" type="password" placeholder="Password">
-
-<div class="msg" id="msg"></div>
-
-<button onclick="login()">Login</button>
-
-<p>No account? <span onclick="registerPage()" style="color:cyan;cursor:pointer;">Register</span></p>
-
-</div>
-
-`
-
-}
-
-/* REGISTER PAGE */
-
-function registerPage(){
-
-document.getElementById("app").innerHTML=`
-
-<div class="box">
-
-<h2>Register</h2>
-
-<input id="user" placeholder="Username">
-
-<input id="pass" type="password" placeholder="Password">
-
-<div class="msg" id="msg"></div>
-
-<button onclick="register()">Register</button>
-
-<p>Already account? <span onclick="loginPage()" style="color:cyan;cursor:pointer;">Login</span></p>
-
-</div>
-
-`
-
-}
-
-/* REGISTER */
-
-function register(){
-
-let u=document.getElementById("user").value
-let p=document.getElementById("pass").value
-
-localStorage.setItem("username",u)
-localStorage.setItem("password",p)
-
-document.getElementById("msg").innerHTML="Account Created"
-
-setTimeout(loginPage,1000)
-
-}
-
-/* LOGIN */
-
-function login(){
-
-let u=document.getElementById("user").value
-let p=document.getElementById("pass").value
-
-if(u==="admin" && p==="admin123"){
-
-window.location="admin.html"
-return
-
-}
-
-let su=localStorage.getItem("username")
-let sp=localStorage.getItem("password")
-
-if(u===su && p===sp){
-
-localStorage.setItem("login","true")
-
-document.getElementById("menuBtn").style.display="block"
-
-dashboard()
-
-}else{
-
-document.getElementById("msg").innerHTML="Wrong Username or Password"
-
-}
-
-}
-
-/* DASHBOARD */
-
-function dashboard(){
-
-let user=localStorage.getItem("username")
-
-document.getElementById("app").innerHTML=`
-
-<div style="text-align:center;padding:20px">
-
-<h2>Hello ${user}</h2>
-
-<p>Welcome to Gaming Panel</p>
-
-</div>
-
-<div class="grid">
-
-<div class="card">📱 Device</div>
-
-<div class="card">🌐 IP</div>
-
-<div class="card">💻 Browser</div>
-
-<div class="card">🔋 Battery</div>
-
-<div class="card">🎮 Orders</div>
-
-<div class="card">✅ Success</div>
-
-</div>
-
-`
-
-}
-
-/* ORDERS */
-
-function orders(){
-
-document.getElementById("app").innerHTML="<h2 style='padding:20px'>No Orders</h2>"
-
-}
-
-/* PROFILE */
-
-function profile(){
-
-let user=localStorage.getItem("username")
-
-document.getElementById("app").innerHTML="<h2 style='padding:20px'>Username: "+user+"</h2>"
-
-}
-
-/* LOGOUT */
-
-function logout(){
-
-localStorage.removeItem("login")
-
-location.reload()
-
-}
-
-</script>
-
-</body>
-</html>
+Create a complete OP level gaming panel web application using HTML, CSS and JavaScript with a futuristic neon gaming UI design.
+
+Design:
+Use a dark animated gradient background with colors like purple, cyan and magenta.
+Create glowing neon borders, glassmorphism cards and smooth hover animations.
+Use a modern gaming dashboard style interface.
+Make the design fully responsive for mobile, tablet and desktop.
+
+Login Page:
+Create a professional login page with a centered glassmorphism login card.
+Add username and password fields with icons.
+Add a show/hide password eye toggle button.
+Add a remember me checkbox.
+Add a forgot password link.
+Show animated error messages for wrong login.
+Add smooth glowing login button animation.
+
+Register Page:
+Create a modern register page.
+Fields should include username, email, password and confirm password.
+Add password strength indicator.
+Validate inputs to prevent empty fields.
+Show success message after account creation.
+Automatically redirect to login page after successful registration.
+
+Authentication System:
+Store users using localStorage.
+Keep login state active after page refresh.
+Add logout system.
+Redirect logged in users to dashboard.
+
+Dashboard:
+After login show a modern gaming dashboard.
+Display username, user credits and welcome message.
+Add glowing cards showing:
+Device information
+Browser name
+IP address
+Battery level
+Orders
+Success rate
+
+Menu System:
+Add a hamburger menu button.
+Menu options:
+Dashboard
+Orders
+Profile
+Shop
+Leaderboard
+Settings
+Logout
+
+Live Visitor Counter:
+Display how many users are currently on the website.
+
+User Statistics Graph:
+Add animated charts showing total users, credits and orders.
+
+Credits Transfer System:
+Allow users to send credits to other users with validation.
+
+Daily Reward System:
+Allow users to claim free credits every 24 hours with a countdown timer.
+
+Achievement Badge System:
+Users can unlock badges such as:
+First Login
+Credit Milestone
+Completed Orders
+
+Announcement Banner:
+Add a scrolling announcement banner that admin can update.
+
+Shop System:
+Create a shop page where users can buy items using credits.
+
+Admin System:
+Create an admin login.
+Admin username: admin
+Admin password: admin123
+Redirect admin to admin.html.
+
+Admin Panel Features:
+Enable maintenance mode.
+View users.
+Reset user credits.
+Send announcements.
+
+Maintenance Mode:
+If maintenance is ON display a full screen message:
+"Server Under Maintenance".
+Block all users except admin.
+
+UI Effects:
+Add glowing hover effects.
+Add card animations.
+Add smooth page transitions.
+Add animated loading screen.
+
+Ensure the entire system runs without errors and keeps a professional neon gaming interface.
