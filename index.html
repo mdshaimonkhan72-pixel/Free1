@@ -1,101 +1,505 @@
-Create a complete OP level gaming panel web application using HTML, CSS and JavaScript with a futuristic neon gaming UI design.
+<!DOCTYPE html>
+<html>
+<head>
 
-Design:
-Use a dark animated gradient background with colors like purple, cyan and magenta.
-Create glowing neon borders, glassmorphism cards and smooth hover animations.
-Use a modern gaming dashboard style interface.
-Make the design fully responsive for mobile, tablet and desktop.
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badal Guild Panel</title>
 
-Login Page:
-Create a professional login page with a centered glassmorphism login card.
-Add username and password fields with icons.
-Add a show/hide password eye toggle button.
-Add a remember me checkbox.
-Add a forgot password link.
-Show animated error messages for wrong login.
-Add smooth glowing login button animation.
+<style>
 
-Register Page:
-Create a modern register page.
-Fields should include username, email, password and confirm password.
-Add password strength indicator.
-Validate inputs to prevent empty fields.
-Show success message after account creation.
-Automatically redirect to login page after successful registration.
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(120deg,#020617,#020617,#020617);
+color:white;
+}
 
-Authentication System:
-Store users using localStorage.
-Keep login state active after page refresh.
-Add logout system.
-Redirect logged in users to dashboard.
+/* header */
 
-Dashboard:
-After login show a modern gaming dashboard.
-Display username, user credits and welcome message.
-Add glowing cards showing:
-Device information
-Browser name
-IP address
-Battery level
-Orders
-Success rate
+.header{
+height:60px;
+display:flex;
+align-items:center;
+padding:0 15px;
+border-bottom:1px solid #222;
+}
 
-Menu System:
-Add a hamburger menu button.
-Menu options:
-Dashboard
-Orders
-Profile
-Shop
-Leaderboard
-Settings
-Logout
+.menuBtn{
+font-size:26px;
+cursor:pointer;
+}
 
-Live Visitor Counter:
-Display how many users are currently on the website.
+/* sidebar */
 
-User Statistics Graph:
-Add animated charts showing total users, credits and orders.
+.sidebar{
+position:fixed;
+top:0;
+left:-260px;
+width:260px;
+height:100%;
+background:#050a1f;
+transition:.3s;
+padding-top:80px;
+}
 
-Credits Transfer System:
-Allow users to send credits to other users with validation.
+.sidebar a{
+display:block;
+padding:15px 25px;
+color:white;
+text-decoration:none;
+font-size:18px;
+border-left:3px solid transparent;
+}
 
-Daily Reward System:
-Allow users to claim free credits every 24 hours with a countdown timer.
+.sidebar a:hover{
+background:#0f1638;
+border-left:3px solid cyan;
+}
 
-Achievement Badge System:
-Users can unlock badges such as:
-First Login
-Credit Milestone
-Completed Orders
+/* menu colors */
 
-Announcement Banner:
-Add a scrolling announcement banner that admin can update.
+.home{color:#29b6ff}
+.dashboard{color:#6ea8ff}
+.guild{color:#00ffae}
+.earn{color:#ff8c42}
+.buy{color:#ffd000}
+.transfer{color:#00eaff}
+.daily{color:#00ff7f}
+.admin{color:#d76bff}
+.logout{color:#ff4c4c}
 
-Shop System:
-Create a shop page where users can buy items using credits.
+/* cards */
 
-Admin System:
-Create an admin login.
-Admin username: admin
-Admin password: admin123
-Redirect admin to admin.html.
+.card{
+margin:25px;
+padding:25px;
+background:#0a0f2b;
+border-radius:12px;
+box-shadow:0 0 20px #0f1c6d;
+text-align:center;
+}
 
-Admin Panel Features:
-Enable maintenance mode.
-View users.
-Reset user credits.
-Send announcements.
+/* login */
 
-Maintenance Mode:
-If maintenance is ON display a full screen message:
-"Server Under Maintenance".
-Block all users except admin.
+.box{
+width:90%;
+max-width:360px;
+margin:90px auto;
+padding:35px;
+background:#0b0f2d;
+border-radius:15px;
+box-shadow:0 0 30px #7a33ff;
+text-align:center;
+}
 
-UI Effects:
-Add glowing hover effects.
-Add card animations.
-Add smooth page transitions.
-Add animated loading screen.
+input{
+width:90%;
+padding:12px;
+margin:10px;
+border-radius:8px;
+border:1px solid #555;
+background:black;
+color:white;
+}
 
-Ensure the entire system runs without errors and keeps a professional neon gaming interface.
+button{
+padding:12px 25px;
+border:none;
+border-radius:8px;
+background:linear-gradient(90deg,#9333ea,#06b6d4);
+color:white;
+cursor:pointer;
+}
+
+.link{
+color:#00eaff;
+cursor:pointer;
+}
+
+/* banner */
+
+.banner{
+background:#11153b;
+padding:10px;
+text-align:center;
+font-size:14px;
+color:#00eaff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="banner" id="banner">📢 Welcome to Badal Guild Panel</div>
+
+<div class="sidebar" id="sidebar">
+
+<a class="home" onclick="home()">Home</a>
+<a class="dashboard" onclick="dashboard()">Dashboard</a>
+<a class="guild" onclick="guild()">Guild Glory</a>
+<a class="earn" onclick="earn()">Earn Credits</a>
+<a class="daily" onclick="daily()">Daily Reward</a>
+<a class="transfer" onclick="transfer()">Transfer Credits</a>
+<a class="buy" onclick="buy()">Buy Credits</a>
+<a class="admin" onclick="admin()">Admin Panel</a>
+<a class="logout" onclick="logout()">Logout</a>
+
+</div>
+
+<div id="app"></div>
+
+<script>
+
+/* start */
+
+if(localStorage.getItem("login")=="true"){
+mainUI()
+}else{
+loginPage()
+}
+
+/* login page */
+
+function loginPage(){
+
+document.getElementById("app").innerHTML=`
+
+<div class="box">
+
+<h2>Login</h2>
+
+<input id="user" placeholder="Username">
+
+<input id="pass" type="password" placeholder="Password">
+
+<p id="msg"></p>
+
+<button onclick="login()">Login</button>
+
+<p>No account? <span class="link" onclick="registerPage()">Register</span></p>
+
+</div>
+
+`
+
+}
+
+/* register */
+
+function registerPage(){
+
+document.getElementById("app").innerHTML=`
+
+<div class="box">
+
+<h2>Register</h2>
+
+<input id="user" placeholder="Username">
+
+<input id="pass" type="password" placeholder="Password">
+
+<p id="msg"></p>
+
+<button onclick="register()">Register</button>
+
+<p>Already account? <span class="link" onclick="loginPage()">Login</span></p>
+
+</div>
+
+`
+
+}
+
+function register(){
+
+let u=user.value
+let p=pass.value
+
+localStorage.setItem("username",u)
+localStorage.setItem("password",p)
+localStorage.setItem("credits",100)
+
+msg.innerHTML="Account Created"
+
+setTimeout(loginPage,1000)
+
+}
+
+/* login */
+
+function login(){
+
+let u=user.value
+let p=pass.value
+
+if(u==localStorage.getItem("username") &&
+p==localStorage.getItem("password")){
+
+localStorage.setItem("login","true")
+mainUI()
+
+}else{
+
+msg.innerHTML="Wrong login"
+
+}
+
+}
+
+/* main UI */
+
+function mainUI(){
+
+document.getElementById("app").innerHTML=`
+
+<div class="header">
+
+<div class="menuBtn" onclick="toggleMenu()">☰</div>
+
+</div>
+
+<div id="content"></div>
+
+`
+
+home()
+
+}
+
+/* menu toggle */
+
+function toggleMenu(){
+
+let s=document.getElementById("sidebar")
+
+if(s.style.left=="0px"){
+s.style.left="-260px"
+}else{
+s.style.left="0px"
+}
+
+}
+
+/* pages */
+
+function home(){
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>🏠 Home</h2>
+
+<p>Welcome to Badal Guild Panel</p>
+
+</div>
+
+`
+
+}
+
+/* dashboard */
+
+function dashboard(){
+
+let user=localStorage.getItem("username")
+let credits=localStorage.getItem("credits")
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>📊 Dashboard</h2>
+
+<p>User: ${user}</p>
+<p>Credits: ${credits}</p>
+
+</div>
+
+`
+
+}
+
+/* guild */
+
+function guild(){
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>🏆 Guild Glory</h2>
+
+<p>Guild achievements coming soon.</p>
+
+</div>
+
+`
+
+}
+
+/* earn credits */
+
+function earn(){
+
+let c=parseInt(localStorage.getItem("credits"))
+
+c+=10
+
+localStorage.setItem("credits",c)
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>💰 Earn Credits</h2>
+
+<p>You earned 10 credits</p>
+
+</div>
+
+`
+
+}
+
+/* daily reward */
+
+function daily(){
+
+let last=localStorage.getItem("daily")
+
+let now=Date.now()
+
+if(!last || now-last>86400000){
+
+let c=parseInt(localStorage.getItem("credits"))
+c+=50
+
+localStorage.setItem("credits",c)
+localStorage.setItem("daily",now)
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>🎁 Daily Reward</h2>
+
+<p>You received 50 credits</p>
+
+</div>
+
+`
+
+}else{
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>⏳ Come back tomorrow</h2>
+
+</div>
+
+`
+
+}
+
+}
+
+/* transfer */
+
+function transfer(){
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>💸 Transfer Credits</h2>
+
+<input id="tuser" placeholder="Username">
+<input id="tamount" placeholder="Amount">
+
+<button onclick="sendCredits()">Send</button>
+
+</div>
+
+`
+
+}
+
+function sendCredits(){
+
+alert("Demo transfer system")
+
+}
+
+/* buy */
+
+function buy(){
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>🛒 Buy Credits</h2>
+
+<button onclick="buyCredits(100)">Buy 100 Credits</button>
+<br><br>
+<button onclick="buyCredits(500)">Buy 500 Credits</button>
+
+</div>
+
+`
+
+}
+
+function buyCredits(a){
+
+let c=parseInt(localStorage.getItem("credits"))
+c+=a
+localStorage.setItem("credits",c)
+
+alert("Credits added")
+
+}
+
+/* admin */
+
+function admin(){
+
+content.innerHTML=`
+
+<div class="card">
+
+<h2>🛠 Admin Panel</h2>
+
+<input id="ann" placeholder="Announcement">
+
+<button onclick="setAnn()">Set Banner</button>
+
+</div>
+
+`
+
+}
+
+function setAnn(){
+
+banner.innerText="📢 "+ann.value
+
+}
+
+/* logout */
+
+function logout(){
+
+localStorage.removeItem("login")
+location.reload()
+
+}
+
+</script>
+
+</body>
+</html>
