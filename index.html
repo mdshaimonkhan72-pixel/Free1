@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Badal Guild Panel</title>
 
@@ -16,9 +17,9 @@ color:white;
 /* banner */
 
 .banner{
-text-align:center;
-padding:10px;
 background:#0b1133;
+padding:10px;
+text-align:center;
 color:#00eaff;
 }
 
@@ -48,7 +49,6 @@ height:100%;
 background:#060c24;
 transition:.3s;
 padding-top:80px;
-z-index:10;
 }
 
 .sidebar a{
@@ -56,17 +56,10 @@ display:block;
 padding:15px 25px;
 color:white;
 text-decoration:none;
-font-size:18px;
 }
 
 .sidebar a:hover{
 background:#11173a;
-}
-
-/* content */
-
-#content{
-padding:20px;
 }
 
 /* cards */
@@ -77,7 +70,7 @@ max-width:600px;
 padding:25px;
 background:#0a1030;
 border-radius:12px;
-box-shadow:0 0 25px #1328a8;
+box-shadow:0 0 20px #1e40af;
 text-align:center;
 }
 
@@ -123,18 +116,28 @@ cursor:pointer;
 
 <body>
 
-<div class="banner" id="banner">📢 Welcome to Badal Guild Panel</div>
+<div class="banner" id="banner">
+📢 Welcome to Badal Guild Panel
+</div>
 
 <div class="sidebar" id="sidebar">
 
 <a onclick="home()">🏠 Home</a>
+
 <a onclick="dashboard()">📊 Dashboard</a>
+
 <a onclick="guild()">🏆 Guild Glory</a>
+
 <a onclick="earn()">💰 Earn Credits</a>
+
 <a onclick="daily()">🎁 Daily Reward</a>
+
 <a onclick="transfer()">💸 Transfer Credits</a>
+
 <a onclick="buy()">🛒 Buy Credits</a>
+
 <a onclick="admin()">🛠 Admin Panel</a>
+
 <a onclick="logout()">🚪 Logout</a>
 
 </div>
@@ -169,7 +172,9 @@ app.innerHTML=`
 
 <button onclick="login()">Login</button>
 
-<p>No account? <span class="link" onclick="registerPage()">Register</span></p>
+<p>No account?
+<span class="link" onclick="registerPage()">Register</span>
+</p>
 
 </div>
 
@@ -195,7 +200,9 @@ app.innerHTML=`
 
 <button onclick="register()">Register</button>
 
-<p>Already account? <span class="link" onclick="loginPage()">Login</span></p>
+<p>Already account?
+<span class="link" onclick="loginPage()">Login</span>
+</p>
 
 </div>
 
@@ -219,10 +226,11 @@ setTimeout(loginPage,1000)
 
 function login(){
 
-if(user.value==localStorage.getItem("username") &&
-pass.value==localStorage.getItem("password")){
+if(user.value==localStorage.getItem("username")
+&& pass.value==localStorage.getItem("password")){
 
 localStorage.setItem("login","true")
+
 mainUI()
 
 }else{
@@ -253,7 +261,7 @@ home()
 
 }
 
-/* sidebar toggle */
+/* toggle menu */
 
 function toggleMenu(){
 
@@ -267,14 +275,17 @@ s.style.left="0px"
 
 }
 
-/* outside click hide menu */
+/* outside click hide */
 
 document.addEventListener("click",function(e){
 
 let sidebar=document.getElementById("sidebar")
 
-if(!sidebar.contains(e.target) && !e.target.classList.contains("menuBtn")){
+if(!sidebar.contains(e.target) &&
+!e.target.classList.contains("menuBtn")){
+
 sidebar.style.left="-260px"
+
 }
 
 })
@@ -297,8 +308,6 @@ content.innerHTML=`
 
 }
 
-/* dashboard */
-
 function dashboard(){
 
 let user=localStorage.getItem("username")
@@ -320,8 +329,6 @@ content.innerHTML=`
 
 }
 
-/* guild */
-
 function guild(){
 
 content.innerHTML=`
@@ -330,15 +337,13 @@ content.innerHTML=`
 
 <h2>🏆 Guild Glory</h2>
 
-<p>Guild achievements coming soon</p>
+<p>Guild system coming soon</p>
 
 </div>
 
 `
 
 }
-
-/* earn */
 
 function earn(){
 
@@ -361,8 +366,6 @@ content.innerHTML=`
 
 }
 
-/* daily reward */
-
 function daily(){
 
 let last=localStorage.getItem("daily")
@@ -382,7 +385,7 @@ content.innerHTML=`
 
 <h2>🎁 Daily Reward</h2>
 
-<p>You received 50 credits</p>
+<p>You got 50 credits</p>
 
 </div>
 
@@ -403,8 +406,6 @@ content.innerHTML=`
 }
 
 }
-
-/* transfer */
 
 function transfer(){
 
@@ -429,8 +430,6 @@ function sendCredits(){
 alert("Transfer system demo")
 
 }
-
-/* shop */
 
 function buy(){
 
@@ -461,8 +460,6 @@ alert("Credits added")
 
 }
 
-/* admin */
-
 function admin(){
 
 content.innerHTML=`
@@ -486,8 +483,6 @@ function setAnn(){
 banner.innerText="📢 "+ann.value
 
 }
-
-/* logout */
 
 function logout(){
 
