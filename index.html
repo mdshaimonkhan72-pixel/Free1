@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Badal Guild Panel</title>
 
@@ -129,21 +128,13 @@ cursor:pointer;
 <div class="sidebar" id="sidebar">
 
 <a onclick="home()">🏠 Home</a>
-
 <a onclick="dashboard()">📊 Dashboard</a>
-
 <a onclick="guild()">🏆 Guild Glory</a>
-
 <a onclick="earn()">💰 Earn Credits</a>
-
 <a onclick="daily()">🎁 Daily Reward</a>
-
 <a onclick="transfer()">💸 Transfer Credits</a>
-
 <a onclick="buy()">🛒 Buy Credits</a>
-
 <a onclick="admin()">🛠 Admin Panel</a>
-
 <a onclick="logout()">🚪 Logout</a>
 
 </div>
@@ -160,7 +151,7 @@ mainUI()
 loginPage()
 }
 
-/* login page */
+/* login */
 
 function loginPage(){
 
@@ -232,7 +223,6 @@ if(user.value==localStorage.getItem("username") &&
 pass.value==localStorage.getItem("password")){
 
 localStorage.setItem("login","true")
-
 mainUI()
 
 }else{
@@ -263,7 +253,7 @@ home()
 
 }
 
-/* toggle sidebar */
+/* sidebar toggle */
 
 function toggleMenu(){
 
@@ -277,21 +267,19 @@ s.style.left="0px"
 
 }
 
-/* click outside hide */
+/* outside click hide menu */
 
 document.addEventListener("click",function(e){
 
 let sidebar=document.getElementById("sidebar")
 
 if(!sidebar.contains(e.target) && !e.target.classList.contains("menuBtn")){
-
 sidebar.style.left="-260px"
-
 }
 
 })
 
-/* home */
+/* pages */
 
 function home(){
 
@@ -342,7 +330,7 @@ content.innerHTML=`
 
 <h2>🏆 Guild Glory</h2>
 
-<p>Guild achievements system coming soon.</p>
+<p>Guild achievements coming soon</p>
 
 </div>
 
@@ -355,7 +343,6 @@ content.innerHTML=`
 function earn(){
 
 let c=parseInt(localStorage.getItem("credits"))
-
 c+=10
 
 localStorage.setItem("credits",c)
@@ -366,7 +353,7 @@ content.innerHTML=`
 
 <h2>💰 Earn Credits</h2>
 
-<p>You earned 10 credits!</p>
+<p>You earned 10 credits</p>
 
 </div>
 
@@ -374,7 +361,7 @@ content.innerHTML=`
 
 }
 
-/* daily */
+/* daily reward */
 
 function daily(){
 
@@ -384,7 +371,6 @@ let now=Date.now()
 if(!last || now-last>86400000){
 
 let c=parseInt(localStorage.getItem("credits"))
-
 c+=50
 
 localStorage.setItem("credits",c)
@@ -396,7 +382,7 @@ content.innerHTML=`
 
 <h2>🎁 Daily Reward</h2>
 
-<p>You got 50 credits</p>
+<p>You received 50 credits</p>
 
 </div>
 
@@ -440,7 +426,7 @@ content.innerHTML=`
 
 function sendCredits(){
 
-alert("Demo transfer")
+alert("Transfer system demo")
 
 }
 
@@ -467,7 +453,6 @@ content.innerHTML=`
 function buyCredits(a){
 
 let c=parseInt(localStorage.getItem("credits"))
-
 c+=a
 
 localStorage.setItem("credits",c)
@@ -507,7 +492,6 @@ banner.innerText="📢 "+ann.value
 function logout(){
 
 localStorage.removeItem("login")
-
 location.reload()
 
 }
