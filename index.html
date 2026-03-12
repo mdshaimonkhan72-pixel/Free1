@@ -4,7 +4,6 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Badal Guild Panel</title>
 
 <style>
@@ -26,7 +25,7 @@ border-bottom:1px solid #1e293b;
 }
 
 .menu{
-font-size:25px;
+font-size:26px;
 cursor:pointer;
 }
 
@@ -54,16 +53,22 @@ background:#0f172a;
 }
 
 .content{
-padding:30px;
+padding:25px;
 }
 
 .card{
 background:#020617;
 border-radius:15px;
-padding:30px;
+padding:25px;
 margin-bottom:20px;
-box-shadow:0 0 25px #1e3a8a;
+box-shadow:0 0 25px #1d4ed8;
 text-align:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
 }
 
 button{
@@ -92,7 +97,7 @@ height:100vh;
 }
 
 .box{
-width:300px;
+width:320px;
 background:#020617;
 padding:30px;
 border-radius:20px;
@@ -118,7 +123,7 @@ text-align:center;
 
 <button onclick="login()">Login</button>
 
-<p>Don't have account? <a onclick="showRegister()">Sign Up</a></p>
+<p>No account? <a onclick="showRegister()">Sign Up</a></p>
 
 </div>
 
@@ -129,7 +134,7 @@ text-align:center;
 
 <div class="box">
 
-<h2>Register</h2>
+<h2>Create Account</h2>
 
 <input id="regUser" placeholder="Username">
 
@@ -137,7 +142,7 @@ text-align:center;
 
 <button onclick="register()">Register</button>
 
-<p>Already have account? <a onclick="showLogin()">Login</a></p>
+<p>Have account? <a onclick="showLogin()">Login</a></p>
 
 </div>
 
@@ -154,6 +159,7 @@ text-align:center;
 
 </div>
 
+
 <div class="sidebar" id="sidebar">
 
 <a onclick="home()">🏠 Home</a>
@@ -168,6 +174,7 @@ text-align:center;
 
 </div>
 
+
 <div class="content" id="content"></div>
 
 </div>
@@ -179,11 +186,13 @@ let sidebar=document.getElementById("sidebar")
 let content=document.getElementById("content")
 
 function toggleMenu(){
+
 if(sidebar.style.left=="0px"){
 sidebar.style.left="-250px"
 }else{
 sidebar.style.left="0px"
 }
+
 }
 
 document.addEventListener("click",function(e){
@@ -193,6 +202,7 @@ sidebar.style.left="-250px"
 }
 
 })
+
 
 function showRegister(){
 loginPage.style.display="none"
@@ -206,8 +216,8 @@ registerPage.style.display="none"
 
 function register(){
 
-let u=document.getElementById("regUser").value
-let p=document.getElementById("regPass").value
+let u=regUser.value
+let p=regPass.value
 
 localStorage.setItem("user",u)
 localStorage.setItem("pass",p)
@@ -219,15 +229,13 @@ showLogin()
 
 }
 
+
 function login(){
 
-let u=document.getElementById("loginUser").value
-let p=document.getElementById("loginPass").value
+let u=loginUser.value
+let p=loginPass.value
 
-let su=localStorage.getItem("user")
-let sp=localStorage.getItem("pass")
-
-if(u==su && p==sp){
+if(u==localStorage.getItem("user") && p==localStorage.getItem("pass")){
 
 loginPage.style.display="none"
 panel.style.display="block"
@@ -235,7 +243,9 @@ panel.style.display="block"
 home()
 
 }else{
-alert("Wrong Login")
+
+alert("Wrong login")
+
 }
 
 }
@@ -244,10 +254,13 @@ function logout(){
 location.reload()
 }
 
+
 function home(){
 
 let user=localStorage.getItem("user")
 let credits=localStorage.getItem("credits")
+
+let time=new Date().toLocaleTimeString()
 
 content.innerHTML=`
 
@@ -259,13 +272,31 @@ content.innerHTML=`
 
 </div>
 
+
+<div class="grid">
+
 <div class="card">
+<h3>👤 User</h3>
+<p>${user}</p>
+</div>
 
-<h3>💰 Credits</h3>
+<div class="card">
+<h3>💰 Wallet</h3>
+<p>${credits} Credits</p>
+</div>
 
-<p>${credits}</p>
+<div class="card">
+<h3>⏰ Server Time</h3>
+<p>${time}</p>
+</div>
+
+<div class="card">
+<h3>🎁 Daily Reward</h3>
+<button onclick="daily()">Claim</button>
+</div>
 
 </div>
+
 
 <div class="card">
 
@@ -273,15 +304,29 @@ content.innerHTML=`
 
 <button onclick="earn()">Earn Credits</button>
 
+<button onclick="transfer()">Transfer</button>
+
 <button onclick="buy()">Buy Credits</button>
 
-<button onclick="transfer()">Transfer</button>
+</div>
+
+
+<div class="card">
+
+<h3>📊 User Statistics</h3>
+
+<p>Total Credits : ${credits}</p>
+
+<p>Tasks Completed : 0</p>
+
+<p>Member Status : Premium</p>
 
 </div>
 
 `
 
 }
+
 
 function dashboard(){
 
@@ -301,6 +346,7 @@ content.innerHTML=`
 
 }
 
+
 function guild(){
 
 content.innerHTML=`
@@ -317,6 +363,7 @@ content.innerHTML=`
 
 }
 
+
 function earn(){
 
 let credits=parseInt(localStorage.getItem("credits"))
@@ -325,21 +372,12 @@ credits+=10
 
 localStorage.setItem("credits",credits)
 
-content.innerHTML=`
+alert("You earned 10 credits")
 
-<div class="card">
-
-<h2>💰 Earn Credits</h2>
-
-<p>You earned 10 credits</p>
-
-<p>Total : ${credits}</p>
-
-</div>
-
-`
+home()
 
 }
+
 
 function daily(){
 
@@ -349,21 +387,12 @@ credits+=20
 
 localStorage.setItem("credits",credits)
 
-content.innerHTML=`
+alert("Daily reward claimed")
 
-<div class="card">
-
-<h2>🎁 Daily Reward</h2>
-
-<p>You received 20 credits</p>
-
-<p>Total : ${credits}</p>
-
-</div>
-
-`
+home()
 
 }
+
 
 function transfer(){
 
@@ -373,7 +402,7 @@ content.innerHTML=`
 
 <h2>🔁 Transfer Credits</h2>
 
-<input id="tamount" placeholder="Amount">
+<input id="amount" placeholder="Enter Amount">
 
 <button onclick="send()">Send</button>
 
@@ -383,15 +412,15 @@ content.innerHTML=`
 
 }
 
+
 function send(){
 
-let amount=parseInt(document.getElementById("tamount").value)
-
+let a=parseInt(amount.value)
 let credits=parseInt(localStorage.getItem("credits"))
 
-if(amount<=credits){
+if(a<=credits){
 
-credits-=amount
+credits-=a
 
 localStorage.setItem("credits",credits)
 
@@ -407,6 +436,7 @@ alert("Not enough credits")
 
 }
 
+
 function buy(){
 
 content.innerHTML=`
@@ -415,17 +445,16 @@ content.innerHTML=`
 
 <h2>🛒 Buy Credits</h2>
 
-<button onclick="buyCredit(100)">Buy 100</button>
-
-<button onclick="buyCredit(500)">Buy 500</button>
-
-<button onclick="buyCredit(1000)">Buy 1000</button>
+<button onclick="buyCredit(100)">100 Credits</button>
+<button onclick="buyCredit(500)">500 Credits</button>
+<button onclick="buyCredit(1000)">1000 Credits</button>
 
 </div>
 
 `
 
 }
+
 
 function buyCredit(c){
 
@@ -435,11 +464,12 @@ credits+=c
 
 localStorage.setItem("credits",credits)
 
-alert("Purchase Success")
+alert("Purchase Successful")
 
 home()
 
 }
+
 
 function admin(){
 
@@ -460,6 +490,5 @@ content.innerHTML=`
 </script>
 
 </body>
-
 </html>
 ```
