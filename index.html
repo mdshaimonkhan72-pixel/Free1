@@ -1,8 +1,10 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Badal Guild Panel</title>
 
 <style>
@@ -14,293 +16,266 @@ background:#020617;
 color:white;
 }
 
-/* banner */
-
-.banner{
-background:#0b1133;
-padding:10px;
-text-align:center;
-color:#00eaff;
-}
-
-/* header */
-
-.header{
+.topbar{
 height:60px;
+background:#020617;
 display:flex;
 align-items:center;
-padding:0 15px;
-border-bottom:1px solid #222;
+padding-left:20px;
+border-bottom:1px solid #1e293b;
 }
 
-.menuBtn{
-font-size:26px;
+.menu{
+font-size:25px;
 cursor:pointer;
 }
 
-/* sidebar */
-
 .sidebar{
 position:fixed;
+left:-250px;
 top:0;
-left:-260px;
-width:260px;
+width:250px;
 height:100%;
-background:#060c24;
+background:#020617;
+padding-top:60px;
 transition:.3s;
-padding-top:80px;
 }
 
 .sidebar a{
 display:block;
-padding:15px 25px;
+padding:15px;
 color:white;
 text-decoration:none;
+border-bottom:1px solid #1e293b;
 }
 
 .sidebar a:hover{
-background:#11173a;
+background:#0f172a;
 }
 
-/* cards */
+.content{
+padding:30px;
+}
 
 .card{
-margin:25px auto;
-max-width:600px;
-padding:25px;
-background:#0a1030;
-border-radius:12px;
-box-shadow:0 0 20px #1e40af;
+background:#020617;
+border-radius:15px;
+padding:30px;
+margin-bottom:20px;
+box-shadow:0 0 25px #1e3a8a;
 text-align:center;
 }
 
-/* login */
-
-.box{
-width:90%;
-max-width:360px;
-margin:100px auto;
-padding:35px;
-background:#0c1238;
-border-radius:15px;
-box-shadow:0 0 30px purple;
-text-align:center;
+button{
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#9333ea,#3b82f6);
+color:white;
+cursor:pointer;
+margin:5px;
 }
 
 input{
 width:90%;
-padding:12px;
+padding:10px;
 margin:10px;
-border-radius:8px;
-border:1px solid #444;
-background:black;
-color:white;
-}
-
-button{
-padding:12px 25px;
+border-radius:10px;
 border:none;
-border-radius:8px;
-background:linear-gradient(90deg,#9333ea,#06b6d4);
-color:white;
-cursor:pointer;
 }
 
-.link{
-color:#00eaff;
-cursor:pointer;
+.auth{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+width:300px;
+background:#020617;
+padding:30px;
+border-radius:20px;
+box-shadow:0 0 25px #9333ea;
+text-align:center;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="banner" id="banner">
-📢 Welcome to Badal Guild Panel
-</div>
-
-<div class="sidebar" id="sidebar">
-
-<a onclick="home()">🏠 Home</a>
-
-<a onclick="dashboard()">📊 Dashboard</a>
-
-<a onclick="guild()">🏆 Guild Glory</a>
-
-<a onclick="earn()">💰 Earn Credits</a>
-
-<a onclick="daily()">🎁 Daily Reward</a>
-
-<a onclick="transfer()">💸 Transfer Credits</a>
-
-<a onclick="buy()">🛒 Buy Credits</a>
-
-<a onclick="admin()">🛠 Admin Panel</a>
-
-<a onclick="logout()">🚪 Logout</a>
-
-</div>
-
-<div id="app"></div>
-
-<script>
-
-/* start */
-
-if(localStorage.getItem("login")=="true"){
-mainUI()
-}else{
-loginPage()
-}
-
-/* login */
-
-function loginPage(){
-
-app.innerHTML=`
+<div id="loginPage" class="auth">
 
 <div class="box">
 
 <h2>Login</h2>
 
-<input id="user" placeholder="Username">
+<input id="loginUser" placeholder="Username">
 
-<input id="pass" type="password" placeholder="Password">
-
-<p id="msg"></p>
+<input id="loginPass" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 
-<p>No account?
-<span class="link" onclick="registerPage()">Register</span>
-</p>
+<p>Don't have account? <a onclick="showRegister()">Sign Up</a></p>
 
 </div>
 
-`
+</div>
 
-}
 
-/* register */
-
-function registerPage(){
-
-app.innerHTML=`
+<div id="registerPage" class="auth" style="display:none">
 
 <div class="box">
 
 <h2>Register</h2>
 
-<input id="user" placeholder="Username">
+<input id="regUser" placeholder="Username">
 
-<input id="pass" type="password" placeholder="Password">
-
-<p id="msg"></p>
+<input id="regPass" type="password" placeholder="Password">
 
 <button onclick="register()">Register</button>
 
-<p>Already account?
-<span class="link" onclick="loginPage()">Login</span>
-</p>
+<p>Already have account? <a onclick="showLogin()">Login</a></p>
 
 </div>
 
-`
+</div>
 
-}
 
-function register(){
+<div id="panel" style="display:none">
 
-localStorage.setItem("username",user.value)
-localStorage.setItem("password",pass.value)
-localStorage.setItem("credits",100)
+<div class="topbar">
 
-msg.innerHTML="Account Created"
+<span class="menu" onclick="toggleMenu()">☰</span>
 
-setTimeout(loginPage,1000)
-
-}
-
-/* login */
-
-function login(){
-
-if(user.value==localStorage.getItem("username")
-&& pass.value==localStorage.getItem("password")){
-
-localStorage.setItem("login","true")
-
-mainUI()
-
-}else{
-
-msg.innerHTML="Wrong login"
-
-}
-
-}
-
-/* main UI */
-
-function mainUI(){
-
-app.innerHTML=`
-
-<div class="header">
-
-<div class="menuBtn" onclick="toggleMenu()">☰</div>
+<span style="margin-left:20px">Badal Guild Panel</span>
 
 </div>
 
-<div id="content"></div>
+<div class="sidebar" id="sidebar">
 
-`
+<a onclick="home()">🏠 Home</a>
+<a onclick="dashboard()">📊 Dashboard</a>
+<a onclick="guild()">🏆 Guild Glory</a>
+<a onclick="earn()">💰 Earn Credits</a>
+<a onclick="daily()">🎁 Daily Reward</a>
+<a onclick="transfer()">🔁 Transfer Credits</a>
+<a onclick="buy()">🛒 Buy Credits</a>
+<a onclick="admin()">⚙ Admin Panel</a>
+<a onclick="logout()">🚪 Logout</a>
 
-home()
+</div>
 
-}
+<div class="content" id="content"></div>
 
-/* toggle menu */
+</div>
+
+
+<script>
+
+let sidebar=document.getElementById("sidebar")
+let content=document.getElementById("content")
 
 function toggleMenu(){
-
-let s=document.getElementById("sidebar")
-
-if(s.style.left=="0px"){
-s.style.left="-260px"
+if(sidebar.style.left=="0px"){
+sidebar.style.left="-250px"
 }else{
-s.style.left="0px"
+sidebar.style.left="0px"
 }
-
 }
-
-/* outside click hide */
 
 document.addEventListener("click",function(e){
 
-let sidebar=document.getElementById("sidebar")
-
-if(!sidebar.contains(e.target) &&
-!e.target.classList.contains("menuBtn")){
-
-sidebar.style.left="-260px"
-
+if(!sidebar.contains(e.target) && !e.target.classList.contains("menu")){
+sidebar.style.left="-250px"
 }
 
 })
 
-/* pages */
+function showRegister(){
+loginPage.style.display="none"
+registerPage.style.display="flex"
+}
+
+function showLogin(){
+loginPage.style.display="flex"
+registerPage.style.display="none"
+}
+
+function register(){
+
+let u=document.getElementById("regUser").value
+let p=document.getElementById("regPass").value
+
+localStorage.setItem("user",u)
+localStorage.setItem("pass",p)
+localStorage.setItem("credits",100)
+
+alert("Account Created")
+
+showLogin()
+
+}
+
+function login(){
+
+let u=document.getElementById("loginUser").value
+let p=document.getElementById("loginPass").value
+
+let su=localStorage.getItem("user")
+let sp=localStorage.getItem("pass")
+
+if(u==su && p==sp){
+
+loginPage.style.display="none"
+panel.style.display="block"
+
+home()
+
+}else{
+alert("Wrong Login")
+}
+
+}
+
+function logout(){
+location.reload()
+}
 
 function home(){
+
+let user=localStorage.getItem("user")
+let credits=localStorage.getItem("credits")
 
 content.innerHTML=`
 
 <div class="card">
 
-<h2>🏠 Home</h2>
+<h2>🏠 Welcome ${user}</h2>
 
-<p>Welcome to Badal Guild Panel</p>
+<p>Welcome to Badal Guild Gaming Panel</p>
+
+</div>
+
+<div class="card">
+
+<h3>💰 Credits</h3>
+
+<p>${credits}</p>
+
+</div>
+
+<div class="card">
+
+<h3>⚡ Quick Actions</h3>
+
+<button onclick="earn()">Earn Credits</button>
+
+<button onclick="buy()">Buy Credits</button>
+
+<button onclick="transfer()">Transfer</button>
 
 </div>
 
@@ -310,7 +285,6 @@ content.innerHTML=`
 
 function dashboard(){
 
-let user=localStorage.getItem("username")
 let credits=localStorage.getItem("credits")
 
 content.innerHTML=`
@@ -319,9 +293,7 @@ content.innerHTML=`
 
 <h2>📊 Dashboard</h2>
 
-<p>User: ${user}</p>
-
-<p>Credits: ${credits}</p>
+<p>Total Credits : ${credits}</p>
 
 </div>
 
@@ -337,7 +309,7 @@ content.innerHTML=`
 
 <h2>🏆 Guild Glory</h2>
 
-<p>Guild system coming soon</p>
+<p>Top Guild Ranking Coming Soon</p>
 
 </div>
 
@@ -347,10 +319,11 @@ content.innerHTML=`
 
 function earn(){
 
-let c=parseInt(localStorage.getItem("credits"))
-c+=10
+let credits=parseInt(localStorage.getItem("credits"))
 
-localStorage.setItem("credits",c)
+credits+=10
+
+localStorage.setItem("credits",credits)
 
 content.innerHTML=`
 
@@ -360,6 +333,8 @@ content.innerHTML=`
 
 <p>You earned 10 credits</p>
 
+<p>Total : ${credits}</p>
+
 </div>
 
 `
@@ -368,16 +343,11 @@ content.innerHTML=`
 
 function daily(){
 
-let last=localStorage.getItem("daily")
-let now=Date.now()
+let credits=parseInt(localStorage.getItem("credits"))
 
-if(!last || now-last>86400000){
+credits+=20
 
-let c=parseInt(localStorage.getItem("credits"))
-c+=50
-
-localStorage.setItem("credits",c)
-localStorage.setItem("daily",now)
+localStorage.setItem("credits",credits)
 
 content.innerHTML=`
 
@@ -385,25 +355,13 @@ content.innerHTML=`
 
 <h2>🎁 Daily Reward</h2>
 
-<p>You got 50 credits</p>
+<p>You received 20 credits</p>
+
+<p>Total : ${credits}</p>
 
 </div>
 
 `
-
-}else{
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>⏳ Come back tomorrow</h2>
-
-</div>
-
-`
-
-}
 
 }
 
@@ -413,11 +371,11 @@ content.innerHTML=`
 
 <div class="card">
 
-<h2>💸 Transfer Credits</h2>
+<h2>🔁 Transfer Credits</h2>
 
 <input id="tamount" placeholder="Amount">
 
-<button onclick="sendCredits()">Send</button>
+<button onclick="send()">Send</button>
 
 </div>
 
@@ -425,9 +383,27 @@ content.innerHTML=`
 
 }
 
-function sendCredits(){
+function send(){
 
-alert("Transfer system demo")
+let amount=parseInt(document.getElementById("tamount").value)
+
+let credits=parseInt(localStorage.getItem("credits"))
+
+if(amount<=credits){
+
+credits-=amount
+
+localStorage.setItem("credits",credits)
+
+alert("Transfer Success")
+
+home()
+
+}else{
+
+alert("Not enough credits")
+
+}
 
 }
 
@@ -439,9 +415,11 @@ content.innerHTML=`
 
 <h2>🛒 Buy Credits</h2>
 
-<button onclick="buyCredits(100)">Buy 100</button>
-<br><br>
-<button onclick="buyCredits(500)">Buy 500</button>
+<button onclick="buyCredit(100)">Buy 100</button>
+
+<button onclick="buyCredit(500)">Buy 500</button>
+
+<button onclick="buyCredit(1000)">Buy 1000</button>
 
 </div>
 
@@ -449,14 +427,17 @@ content.innerHTML=`
 
 }
 
-function buyCredits(a){
+function buyCredit(c){
 
-let c=parseInt(localStorage.getItem("credits"))
-c+=a
+let credits=parseInt(localStorage.getItem("credits"))
 
-localStorage.setItem("credits",c)
+credits+=c
 
-alert("Credits added")
+localStorage.setItem("credits",credits)
+
+alert("Purchase Success")
+
+home()
 
 }
 
@@ -466,11 +447,9 @@ content.innerHTML=`
 
 <div class="card">
 
-<h2>🛠 Admin Panel</h2>
+<h2>⚙ Admin Panel</h2>
 
-<input id="ann" placeholder="Announcement">
-
-<button onclick="setAnn()">Update Banner</button>
+<p>Admin Tools Coming Soon</p>
 
 </div>
 
@@ -478,20 +457,9 @@ content.innerHTML=`
 
 }
 
-function setAnn(){
-
-banner.innerText="📢 "+ann.value
-
-}
-
-function logout(){
-
-localStorage.removeItem("login")
-location.reload()
-
-}
-
 </script>
 
 </body>
+
 </html>
+```
