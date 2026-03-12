@@ -1,509 +1,300 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BADAL GUILD GLORY BOT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        :root {
+            --bg-dark: #050507;
+            --card-bg: rgba(17, 17, 22, 0.9);
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --text-gold: #f59e0b;
+        }
 
-<title>Badal Guild Panel</title>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 0%, #1e1b4b 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, #0f172a 0%, transparent 30%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 40px 20px; /* Padding barano hoyeche jeno scroll space thake */
+            perspective: 1000px;
+            overflow-x: hidden; /* Shudhu horizontal scroll bondho */
+            overflow-y: auto;   /* Vertical scroll allow kora holo */
+        }
 
-<style>
+        /* 3D Floating Animation for Logo */
+        .logo-container {
+            width: 70px;
+            height: 70px;
+            background: #111;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border: 2px solid #333;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+            flex-shrink: 0;
+        }
 
-body{
-margin:0;
-font-family:Arial;
-background:#020617;
-color:white;
-}
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-10px) rotateX(10deg); }
+        }
 
-.topbar{
-height:60px;
-background:#020617;
-display:flex;
-align-items:center;
-padding-left:20px;
-border-bottom:1px solid #1e293b;
-}
+        .ff-title {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            color: var(--text-gold);
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+            font-size: 1.25rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
 
-.menu{
-font-size:26px;
-cursor:pointer;
-}
+        /* Compact 3D Card */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 350px;
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            margin-bottom: 20px;
+        }
 
-.sidebar{
-position:fixed;
-left:-250px;
-top:0;
-width:250px;
-height:100%;
-background:#020617;
-padding-top:60px;
-transition:.3s;
-}
+        /* Perspective Tilt on Desktop Hover */
+        @media (min-width: 1024px) {
+            body:hover .glass-card {
+                transform: rotateX(2deg) rotateY(-2deg);
+            }
+        }
 
-.sidebar a{
-display:block;
-padding:15px;
-color:white;
-text-decoration:none;
-border-bottom:1px solid #1e293b;
-}
+        .input-label {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 9px;
+            color: var(--text-gold);
+            margin-bottom: 6px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
 
-.sidebar a:hover{
-background:#0f172a;
-}
+        .input-box {
+            background: #e2e8f0;
+            color: #0f172a;
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            outline: none;
+            margin-bottom: 15px;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
 
-.content{
-padding:30px;
-}
+        .input-box:focus {
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.5);
+        }
 
-.card{
-background:#020617;
-border-radius:15px;
-padding:25px;
-margin-bottom:20px;
-box-shadow:0 0 25px #1d4ed8;
-text-align:center;
-}
+        .btn-login {
+            background: linear-gradient(135deg, #9333ea, #3b82f6);
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+            margin-top: 5px;
+        }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-}
+        .btn-login:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(147, 51, 234, 0.5);
+            filter: brightness(1.1);
+        }
 
-button{
-padding:10px 20px;
-border:none;
-border-radius:10px;
-background:linear-gradient(90deg,#9333ea,#3b82f6);
-color:white;
-cursor:pointer;
-margin:5px;
-}
+        .status-bar {
+            display: flex;
+            gap: 12px;
+            font-size: 10px;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+        .status-item i { margin-right: 3px; color: #10b981; }
 
-input{
-width:90%;
-padding:10px;
-margin:10px;
-border-radius:10px;
-border:none;
-}
+        .hidden { display: none; }
 
-.auth{
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+        .bg-glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--accent-purple);
+            filter: blur(120px);
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+        }
 
-.box{
-width:320px;
-background:#020617;
-padding:30px;
-border-radius:20px;
-box-shadow:0 0 25px #9333ea;
-text-align:center;
-}
-
-</style>
-
+        /* Custom Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+    </style>
 </head>
-
 <body>
 
-
-<div id="loginPage" class="auth">
-
-<div class="box">
-
-<h2>Login</h2>
-
-<input id="loginUser" placeholder="Username">
-
-<input id="loginPass" type="password" placeholder="Password">
-
-<button onclick="login()">Login</button>
-
-<p>No account? <a onclick="showRegister()">Sign Up</a></p>
-
-</div>
-
-</div>
-
-
-<div id="registerPage" class="auth" style="display:none">
-
-<div class="box">
-
-<h2>Create Account</h2>
-
-<input id="regUser" placeholder="Username">
-
-<input id="regPass" type="password" placeholder="Password">
-
-<button onclick="register()">Register</button>
-
-<p>Have account? <a onclick="showLogin()">Login</a></p>
-
-</div>
-
-</div>
-
-
-<div id="panel" style="display:none">
-
-<div class="topbar">
-
-<span class="menu" onclick="toggleMenu()">☰</span>
-
-<span style="margin-left:20px">Badal Guild Panel</span>
-
-</div>
-
-
-<div class="sidebar" id="sidebar">
-
-<a onclick="home()">🏠 Home</a>
-<a onclick="dashboard()">📊 Dashboard</a>
-<a onclick="guild()">🏆 Guild Glory</a>
-<a onclick="earn()">💰 Earn Credits</a>
-<a onclick="daily()">🎁 Daily Reward</a>
-<a onclick="transfer()">🔁 Transfer Credits</a>
-<a onclick="buy()">🛒 Buy Credits</a>
-<a onclick="admin()">⚙ Admin Panel</a>
-<a onclick="logout()">🚪 Logout</a>
-
-</div>
-
-
-<div class="content" id="content"></div>
-
-</div>
-
-
-<script>
-
-let sidebar=document.getElementById("sidebar")
-let content=document.getElementById("content")
-
-
-function toggleMenu(){
-
-if(sidebar.style.left=="0px"){
-sidebar.style.left="-250px"
-}else{
-sidebar.style.left="0px"
-}
-
-}
-
-
-document.addEventListener("click",function(e){
-
-if(!sidebar.contains(e.target) && !e.target.classList.contains("menu")){
-sidebar.style.left="-250px"
-}
-
-})
-
-
-function showRegister(){
-loginPage.style.display="none"
-registerPage.style.display="flex"
-}
-
-function showLogin(){
-loginPage.style.display="flex"
-registerPage.style.display="none"
-}
-
-
-function register(){
-
-let u=regUser.value
-let p=regPass.value
-
-localStorage.setItem("user",u)
-localStorage.setItem("pass",p)
-localStorage.setItem("credits",100)
-
-alert("Account Created")
-
-showLogin()
-
-}
-
-
-function login(){
-
-let u=loginUser.value
-let p=loginPass.value
-
-if(u==localStorage.getItem("user") && p==localStorage.getItem("pass")){
-
-loginPage.style.display="none"
-panel.style.display="block"
-
-home()
-
-}else{
-
-alert("Wrong Login")
-
-}
-
-}
-
-
-function logout(){
-location.reload()
-}
-
-
-
-function home(){
-
-let user=localStorage.getItem("user")
-let credits=localStorage.getItem("credits")
-let time=new Date().toLocaleTimeString()
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>🏠 Welcome ${user}</h2>
-
-<p>Welcome to Badal Guild Gaming Panel</p>
-
-</div>
-
-
-<div class="grid">
-
-<div class="card">
-<h3>👤 User</h3>
-<p>${user}</p>
-</div>
-
-<div class="card">
-<h3>💰 Wallet</h3>
-<p>${credits} Credits</p>
-</div>
-
-<div class="card">
-<h3>⏰ Server Time</h3>
-<p>${time}</p>
-</div>
-
-<div class="card">
-<h3>🎁 Daily Reward</h3>
-<button onclick="daily()">Claim</button>
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3>⚡ Quick Actions</h3>
-
-<button onclick="earn()">Earn Credits</button>
-
-<button onclick="transfer()">Transfer</button>
-
-<button onclick="buy()">Buy Credits</button>
-
-</div>
-
-
-<div class="card">
-
-<h3>📊 User Statistics</h3>
-
-<p>Total Credits : ${credits}</p>
-
-<p>Tasks Completed : 0</p>
-
-<p>Member Status : Premium</p>
-
-</div>
-
-`
-
-}
-
-
-
-function dashboard(){
-
-let credits=localStorage.getItem("credits")
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>📊 Dashboard</h2>
-
-<p>Total Credits : ${credits}</p>
-
-</div>
-
-`
-
-}
-
-
-
-function guild(){
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>🏆 Guild Glory</h2>
-
-<p>Top Guild Ranking Coming Soon</p>
-
-</div>
-
-`
-
-}
-
-
-
-function earn(){
-
-let credits=parseInt(localStorage.getItem("credits"))
-
-credits+=10
-
-localStorage.setItem("credits",credits)
-
-alert("You earned 10 credits")
-
-home()
-
-}
-
-
-
-function daily(){
-
-let credits=parseInt(localStorage.getItem("credits"))
-
-credits+=20
-
-localStorage.setItem("credits",credits)
-
-alert("Daily reward claimed")
-
-home()
-
-}
-
-
-
-function transfer(){
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>🔁 Transfer Credits</h2>
-
-<input id="amount" placeholder="Enter Amount">
-
-<button onclick="send()">Send</button>
-
-</div>
-
-`
-
-}
-
-
-
-function send(){
-
-let a=parseInt(amount.value)
-let credits=parseInt(localStorage.getItem("credits"))
-
-if(a<=credits){
-
-credits-=a
-localStorage.setItem("credits",credits)
-
-alert("Transfer Success")
-
-home()
-
-}else{
-
-alert("Not enough credits")
-
-}
-
-}
-
-
-
-function buy(){
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>🛒 Buy Credits</h2>
-
-<button onclick="buyCredit(100)">100 Credits</button>
-<button onclick="buyCredit(500)">500 Credits</button>
-<button onclick="buyCredit(1000)">1000 Credits</button>
-
-</div>
-
-`
-
-}
-
-
-
-function buyCredit(c){
-
-let credits=parseInt(localStorage.getItem("credits"))
-
-credits+=c
-
-localStorage.setItem("credits",credits)
-
-alert("Purchase Successful")
-
-home()
-
-}
-
-
-
-function admin(){
-
-content.innerHTML=`
-
-<div class="card">
-
-<h2>⚙ Admin Panel</h2>
-
-<p>Admin tools coming soon</p>
-
-</div>
-
-`
-
-}
-
-</script>
-
+    <div class="bg-glow" style="top: 10%; left: 10%;"></div>
+    <div class="bg-glow" style="bottom: 10%; right: 10%;"></div>
+
+    <!-- 3D Floating Logo -->
+    <div class="logo-container">
+        <i class="fas fa-bolt text-purple-500 text-3xl"></i>
+    </div>
+
+    <!-- Title Section -->
+    <h1 class="ff-title">BADAL GUILD GLORY BOT</h1>
+    <p class="text-teal-400 text-[10px] mb-3 uppercase tracking-[3px] font-bold">Secure Access Terminal</p>
+
+    <!-- Small Status -->
+    <div class="status-bar">
+        <span class="status-item"><i class="fas fa-bolt"></i> FAST</span>
+        <span class="status-item"><i class="fas fa-shield-alt"></i> SECURE</span>
+        <span class="status-item"><i class="fas fa-crown"></i> PREMIUM</span>
+    </div>
+
+    <!-- Main Auth Card -->
+    <div class="glass-card">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <div class="mb-4">
+                <label class="input-label">Username</label>
+                <input type="text" id="user" class="input-box" placeholder="INDRAJBHAI">
+            </div>
+            <div class="mb-5">
+                <label class="input-label">Password</label>
+                <input type="password" class="input-box" placeholder="••••••••••">
+            </div>
+            <button onclick="handleAuth(this)" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <p class="text-[11px] text-gray-500 text-center mt-5">
+                Don't have an account? <span class="text-orange-500 cursor-pointer font-bold hover:underline" onclick="toggleForm()">Sign Up</span>
+            </p>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="hidden">
+            <div class="mb-3">
+                <label class="input-label">Full Name</label>
+                <input type="text" class="input-box" placeholder="Badal Member">
+            </div>
+            <div class="mb-3">
+                <label class="input-label">Username</label>
+                <input type="text" class="input-box" placeholder="Choose Nickname">
+            </div>
+            <div class="mb-3">
+                <label class="input-label">Password</label>
+                <input type="password" id="regPass" class="input-box" placeholder="••••••••••">
+            </div>
+            <div class="mb-5">
+                <label class="input-label">Confirm Password</label>
+                <input type="password" id="confirmPass" class="input-box" placeholder="••••••••••">
+            </div>
+            <button onclick="handleAuth(this)" class="btn-login">
+                <i class="fas fa-user-plus"></i> Join Squad
+            </button>
+            <p class="text-[11px] text-gray-500 text-center mt-5">
+                Already registered? <span class="text-orange-500 cursor-pointer font-bold hover:underline" onclick="toggleForm()">Login</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="mt-4 mb-8 flex gap-5 text-[10px] font-bold text-blue-500 uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity">
+        <a href="#" class="hover:text-white transition-colors">Stay Connected</a>
+        <span class="text-gray-800">/</span>
+        <a href="#" class="hover:text-white transition-colors">Support Center</a>
+    </div>
+
+    <script>
+        // Desktop er jonne 3D Tilt Effect
+        const card = document.querySelector('.glass-card');
+        if (window.innerWidth > 1024) {
+            document.addEventListener('mousemove', (e) => {
+                let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            });
+        }
+
+        function toggleForm() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('registerForm').classList.toggle('hidden');
+            const subTitle = document.querySelector('p.text-teal-400');
+            subTitle.innerText = document.getElementById('loginForm').classList.contains('hidden') 
+                ? "Create Your Identity" 
+                : "Secure Access Terminal";
+            // Form change korle top-e scroll korbe jeno boro form dekha jay
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function handleAuth(btn) {
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> AUTHENTICATING';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> GRANTED';
+                btn.style.background = "#10b981";
+                setTimeout(() => {
+                    alert("Welcome to Badal Guild Glory Bot Panel!");
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    btn.style.background = "";
+                }, 1000);
+            }, 1500);
+        }
+    </script>
 </body>
 </html>
-```
