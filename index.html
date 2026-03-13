@@ -1,162 +1,404 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BADAL GUILD GLORY - OFFICIAL TERMINAL</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap');
-        :root { --bg-dark: #00080a; --cyan-main: #00f0ff; --border-color: #004a5a; --neon-green: #39ff14; }
-        body { background-color: var(--bg-dark); color: #e2e8f0; font-family: 'Rajdhani', sans-serif; margin: 0; overflow-x: hidden; }
-        .cyber-font { font-family: 'Orbitron', sans-serif; }
-        #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.12; pointer-events: none; }
-        .glass-card { background: rgba(10, 25, 30, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px; padding: 20px; position: relative; z-index: 10; }
-        .sidebar { width: 280px; background: rgba(2, 8, 12, 0.98); height: 100vh; position: fixed; left: 0; top: 0; border-right: 1px solid var(--border-color); transition: 0.4s; z-index: 1000; }
-        .sidebar.collapsed { transform: translateX(-100%); }
-        .main-content { margin-left: 280px; padding: 20px; transition: 0.4s; }
-        .main-content.expanded { margin-left: 0; }
-        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0 !important; } }
-        .nav-item { display: flex; align-items: center; padding: 12px 20px; margin: 5px 15px; border-radius: 8px; cursor: pointer; color: #8899a6; font-weight: 600; }
-        .nav-item.active { background: rgba(0, 240, 255, 0.1); color: var(--cyan-main); }
-        .bot-input { background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); color: var(--cyan-main); padding: 12px; border-radius: 6px; width: 100%; font-family: 'Share Tech Mono', monospace; outline: none; }
-        .bot-btn { background: var(--cyan-main); color: #000; font-weight: bold; padding: 12px; border-radius: 6px; width: 100%; text-transform: uppercase; cursor: pointer; border: none; }
-        .status-pill { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgba(57, 255, 20, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
-    </style>
-</head>
-<body>
-    <canvas id="matrix-bg"></canvas>
-    
-    <section id="auth-container" class="flex items-center justify-center min-h-screen p-6 relative">
-        <div id="login-screen" class="glass-card w-full max-w-md text-center">
-            <h1 class="cyber-font text-2xl font-bold mb-4 text-cyan-400">BGG TERMINAL</h1>
-            <form id="loginForm" class="space-y-4">
-                <input type="text" id="user" placeholder="Alias Name" required class="bot-input">
-                <input type="password" id="pass" placeholder="Password" required class="bot-input">
-                <button type="submit" class="bot-btn">Establish Uplink</button>
-            </form>
-            <p class="mt-4 text-xs">New user? <button onclick="toggleAuth('reg')" class="text-cyan-400">Register</button></p>
-        </div>
-        <div id="reg-screen" class="glass-card w-full max-w-md text-center hidden">
-            <h1 class="cyber-font text-2xl font-bold mb-4">NEW IDENTITY</h1>
-            <form id="regForm" class="space-y-4">
-                <input type="text" id="reg-user" placeholder="Create Alias" required class="bot-input">
-                <input type="password" id="reg-pass" placeholder="Password" required class="bot-input">
-                <button type="submit" class="bot-btn">Register</button>
-            </form>
-            <button onclick="toggleAuth('log')" class="mt-4 text-xs text-cyan-400">Back to Login</button>
-        </div>
-    </section>
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { playClickSound, playSuccessSound } from "@/lib/sounds";
+import {
+  ArrowLeft, CreditCard, CheckCircle, Clock, XCircle,
+  Banknote, Package, Send, Loader2, Sparkles, Shield,
+  Copy, ChevronRight, Wallet, Star, Zap, Gift, Crown
+} from "lucide-react";
+import { toast } from "sonner";
 
-    <section id="dashboard-screen" class="hidden min-h-screen">
-        <aside class="sidebar" id="sidebar">
-            <div class="p-8 border-b border-cyan-950 text-center">
-                <h2 class="cyber-font text-lg font-bold">BGG_OFFICIAL</h2>
+interface CreditPackage {
+  name: string;
+  credits: number;
+  priceINR: number;
+  priceBDT: number;
+  popular?: boolean;
+  icon: typeof Zap;
+  color: string;
+}
+
+const PACKAGES: CreditPackage[] = [
+  { name: "Starter", credits: 50, priceINR: 10, priceBDT: 15, icon: Zap, color: "text-[hsl(var(--success))]" },
+  { name: "Popular", credits: 100, priceINR: 20, priceBDT: 30, popular: true, icon: Star, color: "text-[hsl(var(--warning))]" },
+  { name: "Value", credits: 250, priceINR: 45, priceBDT: 65, icon: Gift, color: "text-primary" },
+  { name: "Premium", credits: 500, priceINR: 80, priceBDT: 120, icon: Crown, color: "text-[hsl(var(--btn-gradient-from))]" },
+];
+
+const PAYMENT_METHODS = [
+  { id: "upi", label: "UPI", country: "India", icon: "📱", desc: "Instant transfer" },
+  { id: "bkash", label: "bKash", country: "Bangladesh", icon: "💳", desc: "Mobile banking" },
+  { id: "nagad", label: "Nagad", country: "Bangladesh", icon: "💰", desc: "Digital wallet" },
+  { id: "rocket", label: "Rocket", country: "Bangladesh", icon: "🚀", desc: "Mobile banking" },
+];
+
+interface PaymentConfig {
+  upi_id: string;
+  bkash_number: string;
+  nagad_number: string;
+  rocket_number: string;
+  rate_per_credit_inr: number;
+  rate_per_credit_bdt: number;
+  instructions: string;
+}
+
+const defaultPaymentConfig: PaymentConfig = {
+  upi_id: "example@upi",
+  bkash_number: "01XXXXXXXXX",
+  nagad_number: "01XXXXXXXXX",
+  rocket_number: "01XXXXXXXXX",
+  rate_per_credit_inr: 0.2,
+  rate_per_credit_bdt: 0.3,
+  instructions: "Send the exact amount and submit your Transaction ID below.",
+};
+
+interface CreditOrder {
+  id: string;
+  package_name: string;
+  credits_amount: number;
+  price_amount: number;
+  currency: string;
+  payment_method: string;
+  transaction_id: string;
+  status: string;
+  admin_note: string | null;
+  created_at: string;
+}
+
+const BuyCredits = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [country, setCountry] = useState<"india" | "bangladesh">("india");
+  const [selectedPackage, setSelectedPackage] = useState<CreditPackage | null>(null);
+  const [customCredits, setCustomCredits] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [transactionId, setTransactionId] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [orders, setOrders] = useState<CreditOrder[]>([]);
+  const [paymentConfig, setPaymentConfig] = useState<PaymentConfig>(defaultPaymentConfig);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+
+  useEffect(() => {
+    if (!user) { navigate("/login"); return; }
+    fetchOrders();
+    fetchConfig();
+    const ch = supabase
+      .channel("my-credit-orders")
+      .on("postgres_changes", { event: "*", schema: "public", table: "credit_orders", filter: `user_id=eq.${user.id}` }, () => fetchOrders())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [user]);
+
+  const fetchOrders = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("credit_orders").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+    if (data) setOrders(data as any);
+  };
+
+  const fetchConfig = async () => {
+    const { data } = await supabase.from("dashboard_config").select("*").eq("key", "payment_config").single();
+    if (data?.value) setPaymentConfig({ ...defaultPaymentConfig, ...(data.value as any) });
+  };
+
+  const filteredMethods = PAYMENT_METHODS.filter(m => country === "india" ? m.country === "India" : m.country === "Bangladesh");
+  const getPrice = (credits: number) => country === "india" ? credits * paymentConfig.rate_per_credit_inr : credits * paymentConfig.rate_per_credit_bdt;
+  const getCurrency = () => country === "india" ? "INR" : "BDT";
+  const getCurrencySymbol = () => country === "india" ? "₹" : "৳";
+
+  const getPaymentNumber = () => {
+    switch (paymentMethod) {
+      case "upi": return paymentConfig.upi_id;
+      case "bkash": return paymentConfig.bkash_number;
+      case "nagad": return paymentConfig.nagad_number;
+      case "rocket": return paymentConfig.rocket_number;
+      default: return "";
+    }
+  };
+
+  const getPaymentLabel = () => {
+    switch (paymentMethod) {
+      case "upi": return "UPI ID";
+      case "bkash": return "bKash Number";
+      case "nagad": return "Nagad Number";
+      case "rocket": return "Rocket Number";
+      default: return "";
+    }
+  };
+
+  const finalCredits = selectedPackage ? selectedPackage.credits : parseInt(customCredits) || 0;
+  const finalPrice = selectedPackage
+    ? (country === "india" ? selectedPackage.priceINR : selectedPackage.priceBDT)
+    : getPrice(parseInt(customCredits) || 0);
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Copied!");
+  };
+
+  const handleSubmit = async () => {
+    if (!user || !paymentMethod || !transactionId.trim() || finalCredits <= 0) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    playClickSound();
+    setSubmitting(true);
+    const { error } = await supabase.from("credit_orders").insert({
+      user_id: user.id,
+      username: user.username,
+      package_name: selectedPackage ? selectedPackage.name : `Custom (${finalCredits})`,
+      credits_amount: finalCredits,
+      price_amount: finalPrice,
+      currency: getCurrency(),
+      payment_method: paymentMethod,
+      transaction_id: transactionId.trim(),
+    });
+    setSubmitting(false);
+    if (error) {
+      toast.error("Failed to submit order");
+    } else {
+      playSuccessSound();
+      toast.success("Order submitted! Admin will verify and add credits.");
+      setTransactionId("");
+      setSelectedPackage(null);
+      setCustomCredits("");
+      setPaymentMethod("");
+      setStep(1);
+      fetchOrders();
+    }
+  };
+
+  const statusIcon = (s: string) => {
+    if (s === "approved") return <CheckCircle size={14} className="text-[hsl(var(--success))]" />;
+    if (s === "rejected") return <XCircle size={14} className="text-destructive" />;
+    return <Clock size={14} className="text-[hsl(var(--warning))] animate-pulse" />;
+  };
+
+  const statusBadge = (s: string) => {
+    if (s === "approved") return "bg-[hsl(var(--success)/0.15)] text-[hsl(var(--success))] border-[hsl(var(--success)/0.3)]";
+    if (s === "rejected") return "bg-destructive/15 text-destructive border-destructive/30";
+    return "bg-[hsl(var(--warning)/0.15)] text-[hsl(var(--warning))] border-[hsl(var(--warning)/0.3)]";
+  };
+
+  if (!user) return null;
+
+  return (
+    <div className="min-h-screen bg-background bg-particles">
+      {/* Header */}
+      <header className="header-3d flex items-center gap-3 px-4 py-3 border-b border-border sticky top-0 z-30">
+        <button onClick={() => { playClickSound(); navigate("/home"); }} className="icon-3d p-1">
+          <ArrowLeft className="text-foreground" size={22} />
+        </button>
+        <div className="flex-1">
+          <h1 className="font-display text-sm font-bold text-gradient flex items-center gap-2">
+            <Wallet size={18} className="text-primary" /> Buy Credits
+          </h1>
+        </div>
+        <div className="badge-3d flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border">
+          <Sparkles size={14} className="text-[hsl(var(--warning))]" />
+          <span className="font-display text-sm font-bold text-[hsl(var(--warning))]">{user.credits}</span>
+        </div>
+      </header>
+
+      {/* Step Indicator */}
+      <div className="px-4 py-4 max-w-lg mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className="flex items-center flex-1">
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center font-display text-sm font-bold transition-all duration-300 ${
+                step >= s
+                  ? "bg-gradient-to-br from-[hsl(var(--btn-gradient-from))] to-[hsl(var(--btn-gradient-to))] text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.4)]"
+                  : "bg-muted text-muted-foreground"
+              }`}>
+                {step > s ? <CheckCircle size={16} /> : s}
+              </div>
+              {s < 3 && (
+                <div className={`flex-1 h-[2px] mx-2 rounded-full transition-all duration-500 ${
+                  step > s ? "bg-gradient-to-r from-[hsl(var(--btn-gradient-from))] to-[hsl(var(--btn-gradient-to))]" : "bg-border"
+                }`} />
+              )}
             </div>
-            <nav class="mt-6">
-                <div class="nav-item active" onclick="showSec('home')"><i class="fas fa-home mr-3"></i> Dashboard</div>
-                <div class="nav-item" onclick="showSec('bots')"><i class="fas fa-robot mr-3"></i> Bot Control</div>
-                <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt mr-3"></i> Logout</div>
-            </nav>
-        </aside>
-        <main class="main-content" id="main-content">
-            <header class="flex justify-between items-center mb-6">
-                <button onclick="toggleSidebar()" class="text-cyan-400 text-2xl"><i class="fas fa-bars"></i></button>
-                <div id="clock" class="text-cyan-400 font-mono">00:00:00</div>
-            </header>
+          ))}
+        </div>
+        <div className="flex justify-between text-[10px] font-display text-muted-foreground mb-6 px-1">
+          <span className={step >= 1 ? "text-primary" : ""}>Package</span>
+          <span className={step >= 2 ? "text-primary" : ""}>Payment</span>
+          <span className={step >= 3 ? "text-primary" : ""}>Confirm</span>
+        </div>
+      </div>
 
-            <div id="home-sec" class="sec">
-                <div class="glass-card">
-                    <h2 class="text-2xl font-bold">Welcome, Commander!</h2>
-                    <p class="text-gray-400 text-sm">System is online and ready for commands.</p>
+      <div className="max-w-lg mx-auto px-4 pb-8 space-y-6">
+
+        {/* Step 1: Country + Package */}
+        {step === 1 && (
+          <div className="space-y-5 animate-fade-in-up stagger-children">
+            {/* Country selector */}
+            <div className="space-y-3">
+              <label className="font-display text-xs font-bold text-muted-foreground uppercase tracking-widest">🌍 Select Region</label>
+              <div className="grid grid-cols-2 gap-3">
+                {(["india", "bangladesh"] as const).map(c => (
+                  <button key={c} onClick={() => { playClickSound(); setCountry(c); setPaymentMethod(""); }}
+                    className={`card-gaming p-4 text-center transition-all duration-300 ${
+                      country === c
+                        ? "border-primary/60 shadow-[0_0_20px_hsl(var(--primary)/0.2)] scale-[1.02]"
+                        : "hover:border-border/80"
+                    }`}>
+                    <span className="text-2xl block mb-1">{c === "india" ? "🇮🇳" : "🇧🇩"}</span>
+                    <p className={`font-display text-sm font-bold ${country === c ? "text-primary" : "text-muted-foreground"}`}>
+                      {c === "india" ? "India" : "Bangladesh"}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                      {c === "india" ? "UPI Payment" : "bKash / Nagad / Rocket"}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Packages */}
+            <div className="space-y-3">
+              <label className="font-display text-xs font-bold text-muted-foreground uppercase tracking-widest">💎 Credit Packages</label>
+              <div className="grid grid-cols-2 gap-3">
+                {PACKAGES.map(pkg => {
+                  const Icon = pkg.icon;
+                  const isSelected = selectedPackage?.name === pkg.name;
+                  return (
+                    <button key={pkg.name} onClick={() => { playClickSound(); setSelectedPackage(pkg); setCustomCredits(""); }}
+                      className={`card-gaming p-4 text-left relative transition-all duration-300 group ${
+                        isSelected
+                          ? "border-primary/60 shadow-[0_0_25px_hsl(var(--primary)/0.25)] scale-[1.02]"
+                          : "hover:border-border/80 hover:scale-[1.01]"
+                      }`}>
+                      {pkg.popular && (
+                        <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[hsl(var(--btn-gradient-from))] to-[hsl(var(--btn-gradient-to))] text-primary-foreground text-[9px] font-display font-bold px-3 py-0.5 rounded-full shadow-[0_0_10px_hsl(var(--primary)/0.4)]">
+                          ⭐ BEST VALUE
+                        </span>
+                      )}
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 ${
+                        isSelected ? "bg-primary/20" : "bg-muted"
+                      } transition-colors`}>
+                        <Icon size={20} className={isSelected ? "text-primary" : pkg.color} />
+                      </div>
+                      <p className="font-display text-xs text-muted-foreground">{pkg.name}</p>
+                      <p className={`font-display text-base font-bold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                        {pkg.credits} <span className="text-[10px] text-muted-foreground font-normal">credits</span>
+                      </p>
+                      <div className="mt-2 pt-2 border-t border-border/50">
+                        <p className={`font-display text-lg font-bold ${isSelected ? "text-gradient" : "text-foreground"}`}>
+                          {getCurrencySymbol()}{country === "india" ? pkg.priceINR : pkg.priceBDT}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Custom amount */}
+            <div className="card-gaming p-4 space-y-3">
+              <label className="font-display text-xs font-bold text-muted-foreground uppercase tracking-widest">✏️ Custom Amount</label>
+              <div className="flex gap-3 items-center">
+                <div className="relative flex-1">
+                  <CreditCard size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input type="number" placeholder="Enter credits..." value={customCredits}
+                    onChange={e => { setCustomCredits(e.target.value); setSelectedPackage(null); }}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-input border border-border text-foreground font-display text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all" />
                 </div>
+              </div>
+              {customCredits && parseInt(customCredits) > 0 && (
+                <div className="flex items-center justify-between bg-primary/10 rounded-lg px-3 py-2 border border-primary/20">
+                  <span className="text-xs text-muted-foreground">{customCredits} credits</span>
+                  <span className="font-display text-sm font-bold text-primary">
+                    = {getCurrencySymbol()}{getPrice(parseInt(customCredits)).toFixed(2)}
+                  </span>
+                </div>
+              )}
             </div>
 
-            <div id="bots-sec" class="sec hidden space-y-6">
-                <div class="glass-card">
-                    <h2 class="cyber-font text-lg font-bold mb-4">FAST BOT DEPLOY</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="uid" placeholder="Enter Player UID" class="bot-input">
-                        <select id="cmd" class="bot-input">
-                            <option value="claim">Auto Claim</option>
-                            <option value="sync">Sync Data</option>
-                        </select>
+            <button onClick={() => { if (finalCredits > 0) { playClickSound(); setStep(2); } else toast.error("Select a package or enter credits"); }}
+              className="w-full btn-gaming py-4 font-display text-sm font-bold flex items-center justify-center gap-2 group">
+              Continue <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        )}
+
+        {/* Step 2: Payment */}
+        {step === 2 && (
+          <div className="space-y-5 animate-fade-in-up stagger-children">
+            {/* Order Summary Card */}
+            <div className="card-gaming p-5 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <p className="font-display text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Order Summary</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-display text-2xl font-bold text-gradient">{finalCredits}</p>
+                  <p className="text-xs text-muted-foreground">Credits</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-display text-2xl font-bold text-[hsl(var(--warning))]">{getCurrencySymbol()}{finalPrice}</p>
+                  <p className="text-xs text-muted-foreground">{getCurrency()}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Methods */}
+            <div className="space-y-3">
+              <label className="font-display text-xs font-bold text-muted-foreground uppercase tracking-widest">💳 Payment Method</label>
+              <div className="space-y-2">
+                {filteredMethods.map(m => (
+                  <button key={m.id} onClick={() => { playClickSound(); setPaymentMethod(m.id); }}
+                    className={`w-full card-gaming p-4 flex items-center gap-4 transition-all duration-300 ${
+                      paymentMethod === m.id
+                        ? "border-primary/60 shadow-[0_0_20px_hsl(var(--primary)/0.2)]"
+                        : "hover:border-border/80"
+                    }`}>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${
+                      paymentMethod === m.id ? "bg-primary/20" : "bg-muted"
+                    }`}>
+                      {m.icon}
                     </div>
-                    <button onclick="runBot()" class="bot-btn mt-4">Execute</button>
-                </div>
-                <div class="glass-card">
-                    <h3 class="text-xs font-bold mb-4">LOGS</h3>
-                    <div id="logs" class="text-xs font-mono space-y-2"></div>
-                </div>
+                    <div className="flex-1 text-left">
+                      <p className={`font-display text-sm font-bold ${paymentMethod === m.id ? "text-primary" : "text-foreground"}`}>{m.label}</p>
+                      <p className="text-[10px] text-muted-foreground">{m.desc}</p>
+                    </div>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                      paymentMethod === m.id ? "border-primary bg-primary" : "border-muted-foreground"
+                    }`}>
+                      {paymentMethod === m.id && <div className="w-2 h-2 rounded-full bg-primary-foreground" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
-        </main>
-    </section>
 
-    <script>
-        const getDB = () => JSON.parse(localStorage.getItem('bgg_db') || '[]');
-        const setDB = (d) => localStorage.setItem('bgg_db', JSON.stringify(d));
+            {/* Payment Details */}
+            {paymentMethod && (
+              <div className="card-gaming p-5 border-primary/30 space-y-4 animate-fade-in-up">
+                <div className="flex items-center gap-2">
+                  <Shield size={16} className="text-[hsl(var(--success))]" />
+                  <p className="font-display text-xs font-bold text-[hsl(var(--success))] uppercase">Secure Payment</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-[10px] text-muted-foreground font-display uppercase tracking-wider">{getPaymentLabel()}</p>
+                  <div className="flex items-center gap-2 bg-secondary/80 rounded-xl px-4 py-3 border border-border">
+                    <p className="flex-1 font-mono text-sm text-foreground font-bold select-all">{getPaymentNumber()}</p>
+                    <button onClick={() => copyToClipboard(getPaymentNumber())} className="icon-3d p-1.5 rounded-lg hover:bg-primary/10 transition-colors">
+                      <Copy size={14} className="text-primary" />
+                    </button>
+                  </div>
+                </div>
 
-        function toggleAuth(t) {
-            document.getElementById('login-screen').classList.toggle('hidden', t === 'reg');
-            document.getElementById('reg-screen').classList.toggle('hidden', t === 'log');
-        }
+                <div className="flex items-center gap-2 bg-[hsl(var(--warning)/0.1)] rounded-xl px-4 py-3 border border-[hsl(var(--warning)/0.2)]">
+                  <Banknote size={16} className="text-[hsl(var(--warning))]" />
+                  <p className="text-sm text-foreground">
+                    Send exactly <span className="font-bold text-[hsl(var(--warning))]">{getCurrencySymbol()}{finalPrice}</span>
+                  </p>
+                </div>
 
-        document.getElementById('regForm').onsubmit = (e) => {
-            e.preventDefault();
-            let db = getDB();
-            db.push({u: document.getElementById('reg-user').value, p: document.getElementById('reg-pass').value});
-            setDB(db);
-            alert("Registered!"); toggleAuth('log');
-        };
+                <p className="text-[11px] text-muted-foreground leading-relaxed">{paymentConfig.instructions}</p>
+              </div>
+            )}
 
-        document.getElementById('loginForm').onsubmit = (e) => {
-            e.preventDefault();
-            const user = getDB().find(x => x.u === document.getElementById('user').value && x.p === document.getElementById('pass').value);
-            if(user) {
-                document.getElementById('auth-container').classList.add('hidden');
-                document.getElementById('dashboard-screen').classList.remove('hidden');
-            } else alert("Invalid Login");
-        };
-
-        function showSec(id) {
-            document.querySelectorAll('.sec').forEach(s => s.classList.add('hidden'));
-            document.getElementById(id + '-sec').classList.remove('hidden');
-        }
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebar').classList.toggle('collapsed');
-            document.getElementById('main-content').classList.toggle('expanded');
-        }
-
-        function runBot() {
-            const uid = document.getElementById('uid').value;
-            if(!uid) return alert("Enter UID");
-            const log = document.getElementById('logs');
-            const div = document.createElement('div');
-            div.innerHTML = `[${new Date().toLocaleTimeString()}] Target: ${uid} - <span class="status-pill">SUCCESS</span>`;
-            log.prepend(div);
-        }
-
-        function logout() { location.reload(); }
-
-        // Matrix Effect
-        const c = document.getElementById('matrix-bg');
-        const ctx = c.getContext('2d');
-        let drops;
-        function resize() { c.width = window.innerWidth; c.height = window.innerHeight; drops = Array(Math.floor(c.width/20)).fill(1); }
-        window.onresize = resize; resize();
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 8, 10, 0.05)'; ctx.fillRect(0, 0, c.width, c.height);
-            ctx.fillStyle = '#00f0ff'; ctx.font = '15px monospace';
-            drops.forEach((y, i) => {
-                ctx.fillText(Math.floor(Math.random()*2), i*20, y*20);
-                if(y*20 > c.height && Math.random() > 0.975) drops[i] = 0; drops[i]++;
-            });
-        }
-        setInterval(draw, 50);
-        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
-    </script>
-</body>
-</html>
+            <div classN
