@@ -14,12 +14,12 @@
     html, body { height: 100%; margin: 0; padding: 0; }
     body {
       font-family: 'Nunito', sans-serif;
-      background: #0a0e27;
+      background: #0f0a20;
       min-height: 100%;
     }
 
     .bg-animated {
-      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+      background: linear-gradient(135deg, #0f0a20 0%, #1a0f35 50%, #0d051f 100%);
       position: relative;
       overflow: hidden;
     }
@@ -28,7 +28,7 @@
       content: '';
       position: absolute;
       width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,255,136,0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(147,51,234,0.12) 0%, transparent 70%);
       top: -150px; left: -150px;
       border-radius: 50%;
       animation: float1 12s ease-in-out infinite;
@@ -38,7 +38,7 @@
       content: '';
       position: absolute;
       width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(0,200,255,0.06) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%);
       bottom: -100px; right: -100px;
       border-radius: 50%;
       animation: float2 14s ease-in-out infinite;
@@ -55,22 +55,22 @@
 
     .security-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(0,255,136,0.15); border: 1.5px solid rgba(0,255,136,0.5);
+      background: rgba(147,51,234,0.15); border: 1.5px solid rgba(147,51,234,0.5);
       padding: 8px 12px; border-radius: 8px;
-      font-size: 11px; font-weight: 700; color: #00ff88;
+      font-size: 11px; font-weight: 700; color: #9333ea;
       text-transform: uppercase; letter-spacing: 0.05em;
       margin-bottom: 16px;
-      box-shadow: 0 0 12px rgba(0,255,136,0.2);
+      box-shadow: 0 0 12px rgba(147,51,234,0.2);
     }
 
     .password-meter {
       margin-top: 10px; padding: 12px;
-      background: rgba(0,255,136,0.05); border-radius: 10px;
-      border: 1px solid rgba(0,255,136,0.15);
+      background: rgba(147,51,234,0.05); border-radius: 10px;
+      border: 1px solid rgba(147,51,234,0.15);
     }
 
     .password-meter-label {
-      font-size: 11px; color: rgba(0,255,136,0.6);
+      font-size: 11px; color: rgba(147,51,234,0.6);
       text-transform: uppercase; letter-spacing: 0.05em;
       margin-bottom: 6px; font-weight: 700;
     }
@@ -86,28 +86,402 @@
     }
 
     .requirement.met {
-      color: #00ff88;
+      color: #ec4899;
     }
 
     .requirement-check {
       width: 14px; height: 14px; border-radius: 50%;
-      border: 1.5px solid rgba(0,255,136,0.3);
+      border: 1.5px solid rgba(147,51,234,0.3);
       display: flex; align-items: center; justify-content: center;
       font-size: 9px;
     }
 
     .requirement.met .requirement-check {
-      border-color: #00ff88; background: rgba(0,255,136,0.15);
+      border-color: #ec4899; background: rgba(236,72,153,0.15);
     }
 
     .two-factor-banner {
-      background: linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,200,255,0.08));
-      border: 1px solid rgba(0,255,136,0.25);
+      background: linear-gradient(135deg, rgba(147,51,234,0.08), rgba(236,72,153,0.08));
+      border: 1px solid rgba(147,51,234,0.25);
       border-radius: 12px; padding: 12px;
       margin-top: 16px; margin-bottom: 16px;
       display: flex; align-items: center; gap: 10px;
     }
 
+    .two-factor-banner i { width: 18px; height: 18px; color: #9333ea; flex-shrink: 0; }
+
+    .two-factor-text {
+      font-size: 12px; color: rgba(147,51,234,0.7);
+    }
+
+    .security-info {
+      background: rgba(236,72,153,0.08);
+      border: 1px solid rgba(236,72,153,0.2);
+      border-radius: 10px; padding: 12px;
+      margin-top: 16px;
+      font-size: 12px; color: rgba(236,72,153,0.6);
+      line-height: 1.5;
+    }
+
+    .card {
+      background: rgba(147,51,234,0.03);
+      backdrop-filter: blur(25px);
+      border: 1.5px solid rgba(147,51,234,0.12);
+      border-radius: 24px;
+      box-shadow: 0 0 40px rgba(147,51,234,0.08), 0 32px 64px rgba(0,0,0,0.5);
+    }
+
+    .tab-btn {
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 10px 0;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      width: 100%;
+      color: rgba(255,255,255,0.4);
+      background: transparent;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #9333ea, #ec4899);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(147,51,234,0.4);
+    }
+    .tab-btn:not(.active):hover {
+      color: #9333ea;
+      background: rgba(147,51,234,0.1);
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .input-icon {
+      position: absolute;
+      left: 14px; top: 50%; transform: translateY(-50%);
+      color: rgba(147,51,234,0.5);
+      width: 18px; height: 18px;
+      pointer-events: none;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(147,51,234,0.05);
+      border: 1.5px solid rgba(147,51,234,0.15);
+      border-radius: 12px;
+      padding: 13px 14px 13px 42px;
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-input:focus {
+      border-color: #9333ea;
+      background: rgba(147,51,234,0.1);
+      box-shadow: 0 0 12px rgba(147,51,234,0.2);
+    }
+
+    .label-text {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(147,51,234,0.5);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #9333ea, #ec4899);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 0 25px rgba(147,51,234,0.3);
+      letter-spacing: 0.02em;
+      margin-top: 8px;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px rgba(147,51,234,0.4);
+    }
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 18px 0;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+    .divider-text {
+      font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 600;
+    }
+
+    .success-check {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #9333ea, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 30px rgba(147, 51, 234, 0.3);
+    }
+
+    .success-check i {
+      width: 32px;
+      height: 32px;
+      color: #fff;
+      stroke-width: 3;
+    }
+
+    .social-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      flex: 1;
+      padding: 11px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(147,51,234,0.2);
+      background: rgba(147,51,234,0.05);
+      color: rgba(147,51,234,0.7);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .social-btn:hover {
+      background: rgba(147,51,234,0.12);
+      border-color: rgba(147,51,234,0.4);
+      color: #9333ea;
+      box-shadow: 0 0 15px rgba(147,51,234,0.15);
+    }
+
+    .panel { display: none; animation: fadeIn 0.35s ease; }
+    .panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-toast {
+      display: none;
+      position: fixed;
+      top: 24px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #9333ea, #ec4899);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 0 30px rgba(147,51,234,0.4);
+      z-index: 9999;
+      animation: slideDown 0.3s ease;
+      white-space: nowrap;
+    }
+    @keyframes slideDown {
+      from { top: 0; opacity: 0; }
+      to { top: 24px; opacity: 1; }
+    }
+
+    .error-msg {
+      display: none;
+      color: #f87171;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+
+    .strength-bar-wrap {
+      display: flex; gap: 4px; margin-top: 6px; margin-bottom: 12px;
+    }
+    .strength-seg {
+      flex: 1; height: 4px; border-radius: 4px;
+      background: rgba(0,255,136,0.1);
+      transition: background 0.3s;
+    }
+
+    .checkbox-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      accent-color: #00ff88;
+      width: 15px; height: 15px;
+      cursor: pointer;
+    }
+    .checkbox-row label {
+      color: rgba(255,255,255,0.5);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .checkbox-row a { color: #9333ea; text-decoration: none; }
+    .checkbox-row a:hover { text-decoration: underline; color: #ec4899; }
+
+    .forgot-link {
+      color: #9333ea;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      float: right;
+      margin-top: -4px;
+      margin-bottom: 12px;
+      display: block;
+      transition: color 0.2s, text-shadow 0.2s;
+    }
+    .forgot-link:hover {
+      text-decoration: underline;
+      color: #ec4899;
+      text-shadow: 0 0 8px rgba(147,51,234,0.3);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="toast" class="success-toast"></div>
+  <div class="bg-animated w-full h-full flex items-center justify-center p-4" style="min-height:100%;">
+   <div style="position:relative;z-index:10;width:100%;max-width:420px;"><!-- Logo / Brand -->
+    <div style="text-align:center;margin-bottom:28px;">
+     <div style="display:inline-flex;align-items:center;justify-content:center;
+                  width:56px;height:56px;border-radius:16px;
+                  background:linear-gradient(135deg,#9333ea,#ec4899);
+                  box-shadow:0 0 25px rgba(147,51,234,0.3);margin-bottom:12px;"><i data-lucide="zap" style="width:28px;height:28px;color:#fff;stroke-width:2.5;"></i>
+     </div>
+     <h1 id="brand-name" style="font-size:26px;font-weight:900;color:#fff;margin:0;letter-spacing:-0.02em;">MyApp</h1>
+     <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-top:4px;">Welcome! Sign in to your account</p>
+    </div><!-- Card -->
+    <div class="card" style="padding:28px;"><!-- Tabs -->
+     <div style="display:flex;gap:6px;background:rgba(255,255,255,0.06);padding:5px;border-radius:14px;margin-bottom:24px;"><button class="tab-btn active" id="tab-login" onclick="switchTab('login')"> <i data-lucide="log-in" style="display:inline;width:14px;height:14px;margin-right:5px;vertical-align:middle;"></i>Login </button> <button class="tab-btn" id="tab-register" onclick="switchTab('register')"> <i data-lucide="user-plus" style="display:inline;width:14px;height:14px;margin-right:5px;vertical-align:middle;"></i>Register </button>
+     </div><!-- LOGIN PANEL -->
+     <div id="panel-login" class="panel active">
+      <div class="security-badge"><i data-lucide="shield-check" style="width:13px;height:13px;"></i> Encrypted Connection
+      </div>
+      <form id="login-form" onsubmit="handleLogin(event)">
+       <div class="input-group"><label class="label-text" for="login-username">Username</label> <i data-lucide="user" class="input-icon"></i> <input class="form-input" type="text" id="login-username" placeholder="Enter your username" autocomplete="username">
+       </div>
+       <div id="login-username-err" class="error-msg">
+        Username is required.
+       </div>
+       <div class="input-group" style="margin-bottom:4px;"><label class="label-text" for="login-password">Password</label> <i data-lucide="lock" class="input-icon"></i> <input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+       </div>
+       <div id="login-pass-err" class="error-msg">
+        Password is required.
+       </div><a href="#" class="forgot-link" onclick="showToast('📧 Password reset link sent to your email!'); return false;"> <i data-lucide="help-circle" style="display:inline;width:12px;height:12px;margin-right:3px;vertical-align:middle;"></i> Forgot Password? </a>
+       <div class="security-info"><i data-lucide="info" style="display:inline;width:12px;height:12px;margin-right:5px;vertical-align:middle;"></i> Your data is protected by 256-bit encryption
+       </div><button type="submit" class="submit-btn" id="login-btn"> <span id="login-btn-text">Sign In</span> </button>
+      </form>
+      <div class="divider">
+       <div class="divider-line"></div><span class="divider-text">Or</span>
+       <div class="divider-line"></div>
+      </div>
+      <div style="display:flex;gap:10px;"><button class="social-btn" onclick="showToast('✅ Successfully signed in with Google!')">
+        <svg width="16" height="16" viewbox="0 0 24 24" fill="none">
+         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+        </svg> Google </button> <button class="social-btn" onclick="showToast('✅ Successfully signed in with GitHub!')"> <i data-lucide="github" style="width:15px;height:15px;"></i> GitHub </button>
+      </div>
+      <p style="text-align:center;margin-top:18px;font-size:13px;color:rgba(255,255,255,0.4);">No account yet? <a href="#" style="color:#a855f7;font-weight:700;text-decoration:none;" onclick="switchTab('register');return false;">Register here</a></p>
+     </div><!-- REGISTER PANEL -->
+     <div id="panel-register" class="panel" style="max-height: calc(100vh - 300px); overflow-y: auto; padding-right: 8px;">
+      <div class="security-badge"><i data-lucide="shield-check" style="width:13px;height:13px;"></i> Strong Security
+      </div>
+      <form id="register-form" onsubmit="handleRegister(event)">
+       <div style="display:flex;gap:12px;">
+        <div class="input-group" style="flex:1;"><label class="label-text" for="reg-fname">First Name</label> <i data-lucide="user" class="input-icon"></i> <input class="form-input" type="text" id="reg-fname" placeholder="John" autocomplete="given-name">
+        </div>
+        <div class="input-group" style="flex:1;"><label class="label-text" for="reg-lname">Last Name</label> <i data-lucide="user" class="input-icon"></i> <input class="form-input" type="text" id="reg-lname" placeholder="Doe" autocomplete="family-name">
+        </div>
+       </div>
+       <div class="input-group"><label class="label-text" for="reg-username">Username</label> <i data-lucide="user" class="input-icon"></i> <input class="form-input" type="text" id="reg-username" placeholder="Enter your username" autocomplete="username">
+       </div>
+       <div id="reg-username-err" class="error-msg">
+        Username is required.
+       </div>
+       <div class="input-group" style="margin-bottom:4px;"><label class="label-text" for="reg-password">Password</label> <i data-lucide="lock" class="input-icon"></i> <input class="form-input" type="password" id="reg-password" placeholder="••••••••" oninput="checkStrength(this.value)" autocomplete="new-password">
+       </div><!-- Password strength -->
+       <div class="password-meter">
+        <div class="password-meter-label">
+         Password Strength
+        </div>
+        <div class="strength-bar-wrap">
+         <div class="strength-seg" id="s1"></div>
+         <div class="strength-seg" id="s2"></div>
+         <div class="strength-seg" id="s3"></div>
+         <div class="strength-seg" id="s4"></div>
+        </div>
+        <div class="password-requirements">
+         <div class="requirement" id="req-length">
+          <div class="requirement-check">
+           ○
+          </div> 6+ characters
+         </div>
+         <div class="requirement" id="req-strength">
+          <div class="requirement-check">
+           ○
+          </div> Strong
+         </div>
+         <div class="requirement" id="req-mixed">
+          <div class="requirement-check">
+           ○
+          </div> Mixed types
+         </div>
+         <div class="requirement" id="req-special">
+          <div class="requirement-check">
+           ○
+          </div> Special chars
+         </div>
+        </div>
+       </div>
+       <div id="reg-pass-err" class="error-msg">
+        Strong password required.
+       </div>
+       <div class="input-group"><label class="label-text" for="reg-confirm">Confirm Password</label> <i data-lucide="shield-check" class="input-icon"></i> <input class="form-input" type="password" id="reg-confirm" placeholder="••••••••" autocomplete="new-password">
+       </div>
+       <div id="reg-confirm-err" class="error-msg">
+        Passwords do not match.
+       </div>
+       <div class="two-factor-banner"><i data-lucide="smartphone"></i>
+        <div class="two-factor-text"><strong>Tip:</strong> Enable 2FA for faster sign-up
+        </div>
+       </div>
+       <div class="checkbox-row"><input type="checkbox" id="agree-terms"> <label for="agree-terms">I agree to <a href="#" onclick="return false;">Terms &amp; Conditions</a> and <a href="#" onclick="return false;">Privacy Policy</a></label>
+       </div>
+       <div id="reg-terms-err" class="error-msg" style="margin-top:-8px;">
+        You must accept the terms.
+       </div><button type="submit" class="submit-btn" id="register-btn"> <span id="register-btn-text">Create Account</span> </button>
+      </form>
+      <p style="text-align:center;margin-top:18px;font-size:13px;color:rgba(255,255,255,0.4);">Already have an account? <a href="#" style="color:#a855f7;font-weight:700;text-decoration:none;" onclick="switchTab('login');return false;">Sign In</a></p>
+     </div><!-- SUCCESS PANEL -->
+     <div id="panel-success" class="panel">
+      <div style="text-align:center;margin-bottom:24px;">
+       <div class="success-check"><i data-lucide="check"></i>
+       </div>
+       <h2 style="font-size:24px;font-weight:900;color:#fff;margin:0 0 8px 0;">Registration Successful!</h2>
+       <p style="color:rgba(255,255,255,0.4);font-size:14px;margin:0;">Your account is fully secured</p>
+      </div>
+      <div style="background:rgba(147,51,234,0.1);border:1px solid rgba(147,51,234,0.3);border-radius:16px;padding:20px;margin-bottom:24px;">
+       <div style="margin-bottom:16px;">
+        <p style="font-size:11px;color:rgba(255,255,255,0.4);margin:0 0 6px 0;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">✅ Full Name</p>
+        <p id="success-fullname" style="font-size:16px;color:#fff;margin:0;font-weight:700;">John Doe</p>
+       </div>
+       <div style="margin-bottom:16px;">
+        <p style="font-size:11px;color:rgba(255,255,255,0.4);margin:0 0 6px 0;text-
     .two-factor-banner i { width: 18px; height: 18px; color: #00ff88; flex-shrink: 0; }
 
     .two-factor-text {
